@@ -30,10 +30,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Redirect to dashboard based on role
             switch ($user['role']) {
                 case 'private':
-                    header("Location: ../dashboard/private_and_organization_dashboard.php");
+                    header("Location: ../dashboard/private_person_dashboard.php");
                     exit();
                 case 'organization':
-                    header("Location: ../dashboard/private_and_organization_dashboard.php");
+                    header("Location: ../dashboard/organization_dashboard.php");
                     exit();
                 case 'admin':
                     header("Location: ../dashboard/admin_dashboard.php");

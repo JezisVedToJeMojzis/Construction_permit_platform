@@ -1,6 +1,6 @@
 <?php
 
-class PDORegisterAccountManager{
+class PDORegisterManager{
     private string $serverName;
     private string $userName;
     private string $userPassword;

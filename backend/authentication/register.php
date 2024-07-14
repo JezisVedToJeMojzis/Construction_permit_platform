@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once "../PDO/PDORegisterAccountManager.php";
+require_once "../PDO/PDORegisterManager.php";
 
 $config = require_once "../config.php";
 $serverName = $config["servername"];
@@ -13,7 +13,7 @@ $phone_number = $street = $house_number = $city = $post_code = $country = $ident
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $pdoManager = new PDORegisterAccountManager($serverName, $userName, $userPassword, $databaseName);
+    $pdoManager = new PDORegisterManager($serverName, $userName, $userPassword, $databaseName);
     $email = $_POST['email'];
     $password = $_POST['password'];
     $role = $_POST['role'];
@@ -53,7 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 else {
     header("HTTP/1.1 404 Not Found");
 }
-
 ?>
 
 <!DOCTYPE html>
