@@ -18,24 +18,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $user = $pdoManager->checkEmail($email);
 
     if ($user) {
-        echo '<pre>';
-        print_r($user);
-        echo '</pre>';
         // User found, verify password
         if ($password === $user['password']) {
-            $_SESSION['user_id'] = $user['account_id'];
-            $_SESSION['user_email'] = $user['email'];
-            $_SESSION['user_role'] = $user['role'];
+            $_SESSION['user'] = $user;
+            $_SESSION['account_id'] = $user['id'];
+            $_SESSION['account_email'] = $user['email'];
+            $_SESSION['account_role'] = $user['role'];
 
             // Redirect to dashboard based on role
             switch ($user['role']) {
                 case 'private':
-                    header("Location: ../dashboard/private_person_dashboard.php");
+                    $_SESSION['first_name'] = $user['pp_first_name'];
+                    $_SESSION['last_name'] = $user['pp_last_name'];
+                    $_SESSION['phone_number'] = $user['pp_phone_number'];
+                    $_SESSION['street'] = $user['pp_street'];
+                    $_SESSION['house_number'] = $user['pp_house_number'];
+                    $_SESSION['city'] = $user['pp_city'];
+                    $_SESSION['post_code'] = $user['pp_post_code'];
+                    $_SESSION['country'] = $user['pp_country'];
+                    $_SESSION['identification_number'] = $user['pp_identification_number'];
+                    header("Location: ../dashboard/user_dashboard.php");
                     exit();
                 case 'organization':
-                    header("Location: ../dashboard/organization_dashboard.php");
+                    $_SESSION['organization_name'] = $user['oa_name'];
+                    $_SESSION['contact_first_name'] = $user['oa_contact_first_name'];
+                    $_SESSION['contact_last_name'] = $user['oa_contact_last_name'];
+                    $_SESSION['phone_number'] = $user['oa_phone_number'];
+                    $_SESSION['street'] = $user['oa_street'];
+                    $_SESSION['house_number'] = $user['oa_house_number'];
+                    $_SESSION['city'] = $user['oa_city'];
+                    $_SESSION['post_code'] = $user['oa_post_code'];
+                    $_SESSION['country'] = $user['oa_country'];
+                    $_SESSION['registration_number'] = $user['oa_registration_number'];
+                    header("Location: ../dashboard/user_dashboard.php");
                     exit();
                 case 'admin':
+                    $_SESSION['first_name'] = $user['aa_first_name'];
+                    $_SESSION['last_name'] = $user['aa_last_name'];
                     header("Location: ../dashboard/admin_dashboard.php");
                     exit();
             }
@@ -53,21 +72,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../frontend/styles.css">
     <title>Login</title>
 </head>
 <body>
-<h2>Login</h2>
-<?php if (isset($error_message)): ?>
-    <p><?php echo $error_message; ?></p>
-<?php endif; ?>
-<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
-    <br>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
-    <br>
-    <button type="submit">Login</button>
-</form>
+<div class="menu">
+    <a href="register.php" class="register-btn">Register</a>
+</div>
+<div class="content">
+    <h2>Login</h2>
+    <?php if (isset($error_message)): ?>
+        <p><?php echo $error_message; ?></p>
+    <?php endif; ?>
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <button type="submit">Login</button>
+    </form>
+</div>
 </body>
 </html>
