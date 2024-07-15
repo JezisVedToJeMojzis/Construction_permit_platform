@@ -3,6 +3,6 @@ return array(
     'servername' => 'localhost',
     'username' => 'root',
     'password' => '',
-    'database' => 'construction_permit_database'
+    'database' => 'construction_permit_db'
 );
 ?>

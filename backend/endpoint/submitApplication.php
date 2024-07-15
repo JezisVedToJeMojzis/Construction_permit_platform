@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once "../PDO/PDOLoginManager.php";
+require_once "../PDO/PDOApplicationManager.php";
 
 $config = require_once "../config.php";
 
@@ -12,44 +12,46 @@ $databaseName = $config["database"];
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $pdoManager = new PDOApplicationManager($serverName, $userName, $userPassword, $databaseName);
 
-    $role = isset($_POST['role']) ? $_POST['role'] : '';
+    $role = isset($_POST['selected_role']) ? $_POST['selected_role'] : '';
+    $application_description = isset($_POST['application_description']) ? $_POST['application_description'] : '';
     $street = $_POST['street'];
-    $house_number = $_POST['house_number'];
+    $houseNumber = $_POST['house_number'];
     $city = $_POST['city'];
-    $post_code = $_POST['post_code'];
+    $postCode = $_POST['post_code'];
     $country = $_POST['country'];
-    $parcel_number = $_POST['parcel_number'];
-    $zoning_district = $_POST['zoning_district'];
-    $current_use = $_POST['current_use'];
-    $proposed_use = $_POST['proposed_use'];
-    $project_title = $_POST['project_title'];
-    $project_description = $_POST['project_description'];
-    $estimated_time = $_POST['estimated_time'];
-    $estimated_cost = $_POST['estimated_cost'];
-    $territorial_decision = $_POST['territorial_decision'];
-    $legal_document = $_POST['legal_document'];
-    $construction_specification = $_POST['construction_specification'];
-    $project_documentation = $_POST['project_documentation'];
-    $designer = $_POST['designer'];
-    $supervision = $_POST['supervision'];
-    $electricity = $_POST['electricity'];
-    $water = $_POST['water'];
-    $gas = $_POST['gas'];
-    $road = $_POST['road'];
-    $traffic = $_POST['traffic'];
-    $enviro = $_POST['enviro'];
-    $supporting_documents = $_POST['supporting_documents'];
+    $parcelNumber = $_POST['parcel_number'];
+    $zoningDistrict = $_POST['zoning_district'];
+    $currentUse = $_POST['current_use'];
+    $proposedUse = $_POST['proposed_use'];
+    $projectTitle = $_POST['project_title'];
+    $projectDescription = $_POST['project_description'];
+    $projectType = isset($_POST['project_type']) ? $_POST['project_type'] : '';
+    $estimatedTime = $_POST['estimated_time'];
+    $estimatedCost = $_POST['estimated_cost'];
+    $territorialDecision = $_POST['territorial_decision'];
+    $ownershipOrContractor = $_POST['ownership_document_or_contractor_agreement'];
+    $projectDocumentation = $_POST['project_documentation'];
+    $constructionSpecification = $_POST['construction_specification'];
+    $designerCertificate = $_POST['designer_certificate'];
+    $supervisionDeclaration = $_POST['supervision_declaration'];
+    $electricityStatement = $_POST['electricity_statement'];
+    $waterStatement = $_POST['water_statement'];
+    $gasStatement = $_POST['gas_statement'];
+    $telecommunicationsStatement = $_POST['telecommunications_statement'];
+    $roadStatement = $_POST['road_statement'];
+    $trafficStatement = $_POST['traffic_statement'];
+    $environmentalStatement = $_POST['environmental_statement'];
+    $supportingDocument = $_POST['supporting_document'];
 
-    $pdoManager->submitApplication($role, $street, $house_number, $city, $post_code,
-        $country, $parcel_number, $zoning_district, $current_use,
-        $proposed_use, $project_title, $project_description, $estimated_time, $estimated_cost,
-        $territorial_decision, $legal_document, $construction_specification, $project_documentation,
-        $designer, $supervision, $electricity, $water, $gas, $road, $traffic, $enviro, $supporting_documents);
+    $pdoManager->submitApplication($role, $street, $houseNumber, $city, $postCode,
+        $country, $parcelNumber, $zoningDistrict, $currentUse,
+        $proposedUse, $projectTitle, $projectDescription, $projectType, $estimatedTime, $estimatedCost,
+        $territorialDecision, $ownershipOrContractor, $constructionSpecification, $projectDocumentation,
+        $designerCertificate, $supervisionDeclaration, $electricityStatement, $waterStatement,
+        $gasStatement, $roadStatement, $trafficStatement, $environmentalStatement, $supportingDocument);
 
-    header("Location: login.php");
-}
-else {
-    echo "Error submitting application";
+    header("Location: ../dashboard/user_dashboard.php");
+    exit();
 }
 ?>
 
@@ -58,27 +60,27 @@ else {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multi-Step Form</title>
-    <style>
-        .form-section {
-            display: none;
-            margin-bottom: 20px;
-        }
-        .form-section.active {
-            display: block;
-        }
-    </style>
+    <link rel="stylesheet" href="../../frontend/submitApplicationForm.css">
+    <title>Submit New Application</title>
 </head>
 <body>
+<div class="menu">
+    <a href="../dashboard/user_dashboard.php">View Dashboard</a>
+    <a href="viewProfile.php">View Profile</a>
+    <a href="submitApplication.php">Submit Application</a>
+    <a href="viewApplications.php">View Applications</a>
+    <a href="viewObjections.php">View Objections</a>
+    <a href="../authentication/logout.php">Log Out</a>
+</div>
 <form id="multi_step_form" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
     <!-- Step 1: Select Role -->
     <div id="step_role" class="form-section active">
         <h2>Select Role</h2>
         <label>
-            <input type="radio" name="role" value="owner"> Owner
+            <input type="radio" name="selected_role" value="owner"> Owner
         </label>
         <label>
-            <input type="radio" name="role" value="contractor"> Contractor
+            <input type="radio" name="selected_role" value="contractor"> Contractor
         </label>
         <br>
         <button type="button" id="next_role">Next</button>
@@ -127,6 +129,14 @@ else {
         <label for="project_description">Project description:</label>
         <input type="text" id="project_description" name="project_description" required>
         <br>
+        <label for="project_type">Project type:</label>
+        <select id="project_type" name="project_type" required>
+            <option value="">Select type</option>
+            <option value="construction">Construction</option>
+            <option value="renovation">Renovation</option>
+            <option value="demolition">Demolition</option>
+        </select>
+        <br>
         <label for="estimated_time">Estimated time (in months):</label>
         <input type="text" id="estimated_time" name="estimated_time" required>
         <br>
@@ -143,48 +153,48 @@ else {
         <label for="territorial_decision">Territorial decision:</label>
         <input type="text" id="territorial_decision" name="territorial_decision" required>
         <br>
-        <label for="legal_document">Legal document (ownership/contractorship):</label>
-        <input type="text" id="legal_document" name="legal_document" required>
-        <br>
-        <label for="construction_specification">Construction specification:</label>
-        <input type="text" id="construction_specification" name="construction_specification" required>
+        <label for="ownership_document_or_contractor_agreement">Legal document (ownership/contractorship):</label>
+        <input type="text" id="ownership_document_or_contractor_agreement" name="ownership_document_or_contractor_agreement" required>
         <br>
         <label for="project_documentation">Project documentation:</label>
         <input type="text" id="project_documentation" name="project_documentation" required>
         <br>
-        <label for="designer">Certificate of competence of the designer:</label>
-        <input type="text" id="designer" name="designer" required>
+        <label for="construction_specification">Construction specification:</label>
+        <input type="text" id="construction_specification" name="construction_specification" required>
         <br>
-        <label for="supervision">Declaration of construction supervision:</label>
-        <input type="text" id="supervision" name="supervision" required>
+        <label for="designer_certificate">Certificate of competence of the designer:</label>
+        <input type="text" id="designer_certificate" name="designer_certificate" required>
         <br>
-        <label for="electricity">Statement from electricity networks administrator:</label>
-        <input type="text" id="electricity" name="electricity" required>
+        <label for="supervision_declaration">Declaration of construction supervision:</label>
+        <input type="text" id="supervision_declaration" name="supervision_declaration" required>
         <br>
-        <label for="water">Statement from water networks administrator:</label>
-        <input type="text" id="water" name="water" required>
+        <label for="electricity_statement">Statement from electricity networks administrator:</label>
+        <input type="text" id="electricity_statement" name="electricity_statement" required>
         <br>
-        <label for="gas">Statement from gas networks administrator:</label>
-        <input type="text" id="gas" name="gas" required>
+        <label for="water_statement">Statement from water networks administrator:</label>
+        <input type="text" id="water_statement" name="water_statement" required>
         <br>
-        <label for="road">Statement from road administrator:</label>
-        <input type="text" id="road" name="road" required>
+        <label for="gas_statement">Statement from gas networks administrator:</label>
+        <input type="text" id="gas_statement" name="gas_statement" required>
         <br>
-        <label for="traffic">Statement from traffic inspectorate:</label>
-        <input type="text" id="traffic" name="traffic" required>
+        <label for="telecommunications_statement">Statement from telecommunications networks administrator:</label>
+        <input type="text" id="telecommunications_statement" name="telecommunications_statement" required>
         <br>
-        <label for="enviro">Statement from environmental authority:</label>
-        <input type="text" id="enviro" name="enviro" required>
+        <label for="road_statement">Statement from road administrator:</label>
+        <input type="text" id="road_statement" name="road_statement" required>
         <br>
-        <label for="supporting_documents">Supporting documents:</label>
-        <input type="text" id="supporting_documents" name="supporting_documents" required>
+        <label for="traffic_statement">Statement from traffic inspectorate:</label>
+        <input type="text" id="traffic_statement" name="traffic_statement" required>
+        <br>
+        <label for="environmental_statement">Statement from environmental authority:</label>
+        <input type="text" id="environmental_statement" name="environmental_statement" required>
+        <br>
+        <label for="supporting_document">Supporting documents:</label>
+        <input type="text" id="supporting_document" name="supporting_document" required>
         <br>
         <button type="button" id="prev_documents">Previous</button>
         <button type="submit">Submit</button>
     </div>
-
-    <!-- Hidden input to store selected role -->
-    <input type="hidden" id="selected_role" name="selected_role" value="">
 </form>
 
 <script>
@@ -196,12 +206,10 @@ else {
         const prevProjectBtn = document.getElementById('prev_project');
         const nextProjectBtn = document.getElementById('next_project');
         const prevDocumentsBtn = document.getElementById('prev_documents');
-        const selectedRoleInput = document.getElementById('selected_role');
 
         nextRoleBtn.addEventListener('click', function() {
-            const selectedRole = document.querySelector('input[name="role"]:checked');
+            const selectedRole = document.querySelector('input[name="selected_role"]:checked');
             if (selectedRole) {
-                selectedRoleInput.value = selectedRole.value;
                 document.getElementById('step_role').classList.remove('active');
                 document.getElementById('step_property').classList.add('active');
             } else {
@@ -230,7 +238,7 @@ else {
         });
 
         nextProjectBtn.addEventListener('click', function() {
-            const projectFields = document.querySelectorAll('#step_project input');
+            const projectFields = document.querySelectorAll('#step_project input, #step_project select');
             if (validateFields(projectFields)) {
                 document.getElementById('step_project').classList.remove('active');
                 document.getElementById('step_documents').classList.add('active');
@@ -244,7 +252,6 @@ else {
             document.getElementById('step_project').classList.add('active');
         });
 
-        // Function to validate all fields in a given form section
         function validateFields(fields) {
             for (let i = 0; i < fields.length; i++) {
                 if (fields[i].value.trim() === '') {
@@ -257,3 +264,5 @@ else {
 </script>
 </body>
 </html>
+
+

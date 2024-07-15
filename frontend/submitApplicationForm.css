@@ -1,4 +1,3 @@
-/* CSS for login, register, dashboards */
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
@@ -26,22 +25,7 @@ body {
     color: black;
 }
 
-.register-btn,
-.login-btn {
-    display: inline-block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    background-color: #4CAF50;
-}
-
-.register-btn:hover,
-.login-btn:hover {
-    background-color: #45a049;
-}
-
-.content {
+#multi_step_form {
     max-width: 600px;
     margin: 20px auto;
     padding: 20px;
@@ -50,8 +34,13 @@ body {
     background-color: #fff;
 }
 
-h2 {
-    margin-top: 0;
+.form-section {
+    display: none;
+    margin-bottom: 20px;
+}
+
+.form-section.active {
+    display: block;
 }
 
 label {
@@ -60,8 +49,10 @@ label {
     font-weight: bold;
 }
 
-input[type="email"],
-input[type="password"] {
+input[type="text"],
+input[type="number"],
+select,
+textarea {
     width: calc(100% - 120px);
     padding: 8px;
     margin-bottom: 10px;
@@ -70,6 +61,11 @@ input[type="password"] {
     box-sizing: border-box;
 }
 
+input[type="radio"] {
+    margin-right: 10px;
+}
+
+button[type="button"],
 button[type="submit"] {
     background-color: #4CAF50;
     color: white;
@@ -84,6 +80,11 @@ button[type="submit"] {
     border-radius: 3px;
 }
 
+button[type="button"]:hover,
 button[type="submit"]:hover {
     background-color: #45a049;
+}
+
+#step_role #next_role {
+    margin-top: 40px;
 }

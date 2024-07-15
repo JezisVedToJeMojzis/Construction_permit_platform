@@ -24,7 +24,7 @@ $account_role = $_SESSION['account_role'];
     <a href="../authentication/logout.php">Log Out</a>
 </div>
 <div class="content">
-    <h2>Dashboard</h2>
+    <h2>User Dashboard</h2>
     <div class="profile-field">
         <label>Account ID:</label>
         <span><?php echo htmlspecialchars($account_id); ?></span>

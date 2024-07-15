@@ -8,9 +8,23 @@ $userName = $config["username"];
 $userPassword = $config["password"];
 $databaseName = $config["database"];
 
-$email = $password = $role = $first_name = $last_name = $org_name = $contact_first_name = $contact_last_name = '';
-$phone_number = $street = $house_number = $city = $post_code = $country = $identification_number = $registration_number = '';
-$error_message = '';
+$email = '';
+$password = '';
+$role = '';
+$first_name = '';
+$last_name = '';
+$org_name = '';
+$contact_first_name = '';
+$contact_last_name = '';
+$phone_number = '';
+$street = '';
+$house_number = '';
+$city = '';
+$post_code = '';
+$country = '';
+$identification_number = '';
+$registration_number = '';
+$error_message ="";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $pdoManager = new PDORegisterManager($serverName, $userName, $userPassword, $databaseName);
@@ -19,31 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'];
     $role = $_POST['role'];
 
-    // Validate role selection
-    if (empty($role)) {
-        $error_message = "Please select a role (Private Person or Organization).";
-    } elseif ($role === 'private') {
-        $first_name = $_POST['first_name'];
-        $last_name = $_POST['last_name'];
-        $phone_number = $_POST['phone_number'];
-        $street = $_POST['street'];
-        $house_number = $_POST['house_number'];
-        $city = $_POST['city'];
-        $post_code = $_POST['post_code'];
-        $country = $_POST['country'];
-        $identification_number = $_POST['identification_number'];
-        // Check if any field is empty
-        if (empty($first_name) || empty($last_name) || empty($phone_number) || empty($street) ||
-            empty($house_number) || empty($city) || empty($post_code) || empty($country) || empty($identification_number)) {
-            $error_message = "Please fill in all fields.";
-        } else {
-            $pdoManager->registerPrivateAccount($email, $password, $role, $first_name, $last_name,
-                $phone_number, $street, $house_number, $city, $post_code,
-                $country, $identification_number);
-            header("Location: login.php");
-            exit();
-        }
-    } elseif ($role === 'organization') {
+    if ($role === 'organization') {
         $org_name = $_POST['org_name'];
         $contact_first_name = $_POST['contact_first_name'];
         $contact_last_name = $_POST['contact_last_name'];
@@ -54,19 +44,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $post_code = $_POST['post_code'];
         $country = $_POST['country'];
         $registration_number = $_POST['registration_number'];
-        // Check if any field is empty
-        if (empty($org_name) || empty($contact_first_name) || empty($contact_last_name) || empty($phone_number) ||
-            empty($street) || empty($house_number) || empty($city) || empty($post_code) || empty($country) ||
-            empty($registration_number)) {
-            $error_message = "Please fill in all fields.";
-        } else {
-            $pdoManager->registerOrganizationAccount($email, $password, $role, $org_name, $contact_first_name,
+        $pdoManager->registerOrganizationAccount($email, $password, $role, $org_name, $contact_first_name,
                 $contact_last_name, $phone_number, $street, $house_number,
                 $city, $post_code, $country, $registration_number);
-            header("Location: login.php");
-            exit();
-        }
     }
+
+    else if ($role === 'private') {
+        $first_name = $_POST['first_name'];
+        $last_name = $_POST['last_name'];
+        $phone_number = $_POST['phone_number'];
+        $street = $_POST['street'];
+        $house_number = $_POST['house_number'];
+        $city = $_POST['city'];
+        $post_code = $_POST['post_code'];
+        $country = $_POST['country'];
+        $identification_number = $_POST['identification_number'];
+        $pdoManager->registerPrivateAccount($email, $password, $role, $first_name, $last_name,
+            $phone_number, $street, $house_number, $city, $post_code,
+            $country, $identification_number);
+    }
+    header("Location: login.php");
 }
 
 ?>
@@ -111,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <?php if (!empty($error_message)): ?>
         <p><?php echo $error_message; ?></p>
     <?php endif; ?>
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" onsubmit="return validateForm()">
+    <form action="register.php" method="post" onsubmit="return validateForm()">
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
         <br>
@@ -227,7 +224,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             return false;
         }
 
-        // Validate based on role
+        //Validate based on role
         if (role === 'private') {
             var first_name = document.getElementById('first_name').value.trim();
             var last_name = document.getElementById('last_name').value.trim();
@@ -265,7 +262,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 return false;
             }
         }
-
         return true;
     }
 </script>

@@ -24,7 +24,7 @@ $account_last_name = $_SESSION['last_name'];
     <a href="../authentication/logout.php">Log Out</a>
 </div>
 <div class="content">
-    <h2>Dashboard</h2>
+    <h2>Admin Dashboard</h2>
     <div class="profile-field">
         <label>Account ID:</label>
         <span><?php echo htmlspecialchars($account_id); ?></span>
