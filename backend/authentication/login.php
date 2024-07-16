@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $_SESSION['post_code'] = $user['pp_post_code'];
                     $_SESSION['country'] = $user['pp_country'];
                     $_SESSION['identification_number'] = $user['pp_identification_number'];
-                    header("Location: ../dashboard/user_dashboard.php");
+                    header("Location: ../../frontend/dashboard/user_dashboard.php");
                     exit();
                 case 'organization':
                     $_SESSION['organization_name'] = $user['oa_name'];
@@ -54,12 +54,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $_SESSION['post_code'] = $user['oa_post_code'];
                     $_SESSION['country'] = $user['oa_country'];
                     $_SESSION['registration_number'] = $user['oa_registration_number'];
-                    header("Location: ../dashboard/user_dashboard.php");
+                    header("Location: ../../frontend/dashboard/user_dashboard.php");
                     exit();
                 case 'admin':
                     $_SESSION['first_name'] = $user['aa_first_name'];
                     $_SESSION['last_name'] = $user['aa_last_name'];
-                    header("Location: ../dashboard/admin_dashboard.php");
+                    header("Location: ../../frontend/dashboard/admin_dashboard.php");
                     exit();
             }
         } else {
