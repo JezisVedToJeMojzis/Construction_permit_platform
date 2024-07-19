@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applications List</title>
+    <link rel="stylesheet" href="../css/viewApplications.css">
+</head>
+<body>
+
+<div class="menu">
+    <a href="../dashboard/user_dashboard.php">View Dashboard</a>
+    <a href="../profile/viewProfile.php">View Profile</a>
+    <a href="submitApplication.html">Submit Application</a>
+    <a href="viewApplications.html">View Applications</a>
+    <a href="viewObjections.php">View Objections</a>
+    <a href="../../backend/authentication/logout.php">Log Out</a>
+</div>
+
+<div class="content">
+    <h1>Applications List</h1>
+
+    <div class="controls">
+        <label><strong>Application Status:</strong></label>
+        <label><input type="radio" name="statusFilter" value="open" checked> Open Applications</label>
+        <label><input type="radio" name="statusFilter" value="closed"> Closed Applications</label>
+    </div>
+
+    <div class="controls">
+        <label><strong>Search by Application ID:</strong></label>
+        <input type="text" id="searchIdInput" placeholder="Enter application ID">
+    </div>
+
+    <div class="controls">
+        <label><strong>Search by Account ID:</strong></label>
+        <input type="text" id="searchAccountInput" placeholder="Enter account ID">
+    </div>
+
+    <table id="applicationsTable">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Account ID</th>
+            <th>Status Description</th>
+            <th>Role</th>
+            <th>Submission Date and Time</th>
+            <th>Last Change</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td colspan="6">Loading...</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function fetchApplications(status, searchId = '', searchAccount = '') {
+        const endpoint = status === 'closed'
+            ? '../../backend/application/getAllClosedApplications.php'
+            : '../../backend/application/getAllOpenApplications.php';
+
+        fetch(endpoint)
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.querySelector('#applicationsTable tbody');
+                tableBody.innerHTML = '';  // Clear the loading row
+
+                if (data.error) {
+                    tableBody.innerHTML = `<tr><td colspan="6">${data.error}</td></tr>`;
+                    return;
+                }
+
+                if (data.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="6">No applications found.</td></tr>`;
+                } else {
+                    let filteredData = data;
+                    if (searchId) {
+                        filteredData = filteredData.filter(app => app.id.toString() === searchId);
+                    }
+                    if (searchAccount) {
+                        filteredData = filteredData.filter(app => app.account_id.toString() === searchAccount);
+                    }
+
+                    filteredData.forEach(app => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${app.id}</td>
+                            <td>${app.account_id}</td>
+                            <td>${app.status_status}</td>
+                            <td>${app.role}</td>
+                            <td>${app.submission_date_and_time}</td>
+                            <td>${app.last_change}</td>
+                        `;
+                        row.addEventListener('click', () => {
+                            window.location.href = `applicationDetail.html?id=${app.id}`;
+                        });
+                        tableBody.appendChild(row);
+                    });
+                }
+            })
+            .catch(error => {
+                document.querySelector('#applicationsTable tbody').innerHTML = `<tr><td colspan="6">Error loading data.</td></tr>`;
+                console.error('Error:', error);
+            });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchApplications('open');
+
+        document.querySelectorAll('input[name="statusFilter"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const selectedStatus = this.value;
+                fetchApplications(selectedStatus);
+            });
+        });
+
+        document.getElementById('searchIdInput').addEventListener('input', function() {
+            const searchId = this.value.trim();
+            const searchAccount = document.getElementById('searchAccountInput').value.trim();
+            const selectedStatus = document.querySelector('input[name="statusFilter"]:checked').value;
+            fetchApplications(selectedStatus, searchId, searchAccount);
+        });
+
+        document.getElementById('searchAccountInput').addEventListener('input', function() {
+            const searchAccount = this.value.trim();
+            const searchId = document.getElementById('searchIdInput').value.trim();
+            const selectedStatus = document.querySelector('input[name="statusFilter"]:checked').value;
+            fetchApplications(selectedStatus, searchId, searchAccount);
+        });
+    });
+</script>
+
+</body>
+</html>

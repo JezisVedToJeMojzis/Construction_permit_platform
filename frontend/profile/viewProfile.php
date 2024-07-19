@@ -17,7 +17,7 @@ $isOrganization = ($_SESSION['account_role'] === 'organization');
     <a href="../dashboard/user_dashboard.php">View Dashboard</a>
     <a href="viewProfile.php">View Profile</a>
     <a href="../application/submitApplication.html">Submit Application</a>
-    <a href="viewApplications.php">View Applications</a>
+    <a href="../application/viewApplications.html">View Applications</a>
     <a href="viewObjections.php">View Objections</a>
     <a href="../../backend/authentication/logout.php">Log Out</a>
 </div>

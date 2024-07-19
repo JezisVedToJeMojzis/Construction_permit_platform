@@ -29,9 +29,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $projectType = isset($_POST['project_type']) ? $_POST['project_type'] : '';
     $estimatedTime = $_POST['estimated_time'];
     $estimatedCost = $_POST['estimated_cost'];
+
     $territorialDecision = $_POST['territorial_decision'];
     $ownershipOrContractor = $_POST['ownership_document_or_contractor_agreement'];
     $projectDocumentation = $_POST['project_documentation'];
+    $architecturalPlan = $_POST['architectural_plan'];
     $constructionSpecification = $_POST['construction_specification'];
     $designerCertificate = $_POST['designer_certificate'];
     $supervisionDeclaration = $_POST['supervision_declaration'];
@@ -42,14 +44,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $roadStatement = $_POST['road_statement'];
     $trafficStatement = $_POST['traffic_statement'];
     $environmentalStatement = $_POST['environmental_statement'];
+
     $supportingDocument = $_POST['supporting_document'];
 
     $pdoManager->submitApplication($accountId, $role, $street, $houseNumber, $city, $postCode,
         $country, $parcelNumber, $zoningDistrict, $currentUse,
         $proposedUse, $projectTitle, $projectDescription, $projectType, $estimatedTime, $estimatedCost,
         $territorialDecision, $ownershipOrContractor, $constructionSpecification, $projectDocumentation,
-        $designerCertificate, $supervisionDeclaration, $electricityStatement, $waterStatement,
-        $gasStatement, $roadStatement, $trafficStatement, $environmentalStatement, $supportingDocument);
+        $architecturalPlan, $designerCertificate, $supervisionDeclaration, $electricityStatement, $waterStatement,
+        $gasStatement, $telecommunicationsStatement, $roadStatement, $trafficStatement, $environmentalStatement, $supportingDocument);
 
     header("Location: ../../frontend/dashboard/user_dashboard.php");
     exit();

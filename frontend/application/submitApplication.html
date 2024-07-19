@@ -11,11 +11,11 @@
     <a href="../dashboard/user_dashboard.php">View Dashboard</a>
     <a href="../profile/viewProfile.php">View Profile</a>
     <a href="submitApplication.html">Submit Application</a>
-    <a href="viewApplications.php">View Applications</a>
+    <a href="viewApplications.html">View Applications</a>
     <a href="viewObjections.php">View Objections</a>
     <a href="../../backend/authentication/logout.php">Log Out</a>
 </div>
-<form id="multi_step_form" action="../../backend/application/submitApplication.php" method="post">
+<form id="multi_step_form" action="../../backend/application/postApplication.php" method="post">
     <!-- Step 1: Select Role -->
     <div id="step_role" class="form-section active">
         <h2>Select Role</h2>
@@ -33,31 +33,31 @@
     <div id="step_property" class="form-section">
         <h2>Property Information</h2>
         <label for="street">Street:</label>
-        <input type="text" id="street" name="street" required>
+        <input type="text" id="street" name="street" value="Example Street" required>
         <br>
         <label for="house_number">House number:</label>
-        <input type="text" id="house_number" name="house_number" required>
+        <input type="text" id="house_number" name="house_number" value="123" required>
         <br>
         <label for="city">City:</label>
-        <input type="text" id="city" name="city" required>
+        <input type="text" id="city" name="city" value="Sample City" required>
         <br>
         <label for="post_code">Post code:</label>
-        <input type="text" id="post_code" name="post_code" required>
+        <input type="text" id="post_code" name="post_code" value="12345" required>
         <br>
         <label for="country">Country:</label>
-        <input type="text" id="country" name="country" required>
+        <input type="text" id="country" name="country" value="Countryland" required>
         <br>
         <label for="parcel_number">Parcel number:</label>
-        <input type="text" id="parcel_number" name="parcel_number" required>
+        <input type="text" id="parcel_number" name="parcel_number" value="P123456" required>
         <br>
         <label for="zoning_district">Zoning district:</label>
-        <input type="text" id="zoning_district" name="zoning_district" required>
+        <input type="text" id="zoning_district" name="zoning_district" value="Residential" required>
         <br>
         <label for="current_use">Current use:</label>
-        <input type="text" id="current_use" name="current_use" required>
+        <input type="text" id="current_use" name="current_use" value="Residential" required>
         <br>
         <label for="proposed_use">Proposed use:</label>
-        <input type="text" id="proposed_use" name="proposed_use" required>
+        <input type="text" id="proposed_use" name="proposed_use" value="Commercial" required>
         <br>
         <button type="button" id="prev_property">Previous</button>
         <button type="button" id="next_property">Next</button>
@@ -67,24 +67,24 @@
     <div id="step_project" class="form-section">
         <h2>Project Information</h2>
         <label for="project_title">Project title:</label>
-        <input type="text" id="project_title" name="project_title" required>
+        <input type="text" id="project_title" name="project_title" value="New Building Project" required>
         <br>
         <label for="project_description">Project description:</label>
-        <input type="text" id="project_description" name="project_description" required>
+        <input type="text" id="project_description" name="project_description" value="Construction of a new office building" required>
         <br>
         <label for="project_type">Project type:</label>
         <select id="project_type" name="project_type" required>
             <option value="">Select type</option>
-            <option value="construction">Construction</option>
+            <option value="construction" selected>Construction</option>
             <option value="renovation">Renovation</option>
             <option value="demolition">Demolition</option>
         </select>
         <br>
         <label for="estimated_time">Estimated time (in months):</label>
-        <input type="text" id="estimated_time" name="estimated_time" required>
+        <input type="text" id="estimated_time" name="estimated_time" value="12" required>
         <br>
         <label for="estimated_cost">Estimated cost (in €):</label>
-        <input type="text" id="estimated_cost" name="estimated_cost" required>
+        <input type="text" id="estimated_cost" name="estimated_cost" value="1000000" required>
         <br>
         <button type="button" id="prev_project">Previous</button>
         <button type="button" id="next_project">Next</button>
@@ -94,50 +94,54 @@
     <div id="step_documents" class="form-section">
         <h2>Documents</h2>
         <label for="territorial_decision">Territorial decision:</label>
-        <input type="text" id="territorial_decision" name="territorial_decision" required>
+        <input type="text" id="territorial_decision" name="territorial_decision" value="Approved" required>
         <br>
         <label for="ownership_document_or_contractor_agreement">Legal document (ownership/contractorship):</label>
-        <input type="text" id="ownership_document_or_contractor_agreement" name="ownership_document_or_contractor_agreement" required>
+        <input type="text" id="ownership_document_or_contractor_agreement" name="ownership_document_or_contractor_agreement" value="Ownership Document" required>
         <br>
         <label for="project_documentation">Project documentation:</label>
-        <input type="text" id="project_documentation" name="project_documentation" required>
+        <input type="text" id="project_documentation" name="project_documentation" value="Complete Documentation" required>
+        <br>
+        <label for="architectural_plan">Architectural plan:</label>
+        <input type="text" id="architectural_plan" name="architectural_plan" value="Detailed Specifications" required>
         <br>
         <label for="construction_specification">Construction specification:</label>
-        <input type="text" id="construction_specification" name="construction_specification" required>
+        <input type="text" id="construction_specification" name="construction_specification" value="Detailed Specifications" required>
         <br>
         <label for="designer_certificate">Certificate of competence of the designer:</label>
-        <input type="text" id="designer_certificate" name="designer_certificate" required>
+        <input type="text" id="designer_certificate" name="designer_certificate" value="Certified" required>
         <br>
         <label for="supervision_declaration">Declaration of construction supervision:</label>
-        <input type="text" id="supervision_declaration" name="supervision_declaration" required>
+        <input type="text" id="supervision_declaration" name="supervision_declaration" value="Supervised" required>
         <br>
         <label for="electricity_statement">Statement from electricity networks administrator:</label>
-        <input type="text" id="electricity_statement" name="electricity_statement" required>
+        <input type="text" id="electricity_statement" name="electricity_statement" value="Provided" required>
         <br>
         <label for="water_statement">Statement from water networks administrator:</label>
-        <input type="text" id="water_statement" name="water_statement" required>
+        <input type="text" id="water_statement" name="water_statement" value="Provided" required>
         <br>
         <label for="gas_statement">Statement from gas networks administrator:</label>
-        <input type="text" id="gas_statement" name="gas_statement" required>
+        <input type="text" id="gas_statement" name="gas_statement" value="Provided" required>
         <br>
         <label for="telecommunications_statement">Statement from telecommunications networks administrator:</label>
-        <input type="text" id="telecommunications_statement" name="telecommunications_statement" required>
+        <input type="text" id="telecommunications_statement" name="telecommunications_statement" value="Provided" required>
         <br>
         <label for="road_statement">Statement from road administrator:</label>
-        <input type="text" id="road_statement" name="road_statement" required>
+        <input type="text" id="road_statement" name="road_statement" value="Provided" required>
         <br>
         <label for="traffic_statement">Statement from traffic inspectorate:</label>
-        <input type="text" id="traffic_statement" name="traffic_statement" required>
+        <input type="text" id="traffic_statement" name="traffic_statement" value="Provided" required>
         <br>
         <label for="environmental_statement">Statement from environmental authority:</label>
-        <input type="text" id="environmental_statement" name="environmental_statement" required>
+        <input type="text" id="environmental_statement" name="environmental_statement" value="Provided" required>
         <br>
         <label for="supporting_document">Supporting documents:</label>
-        <input type="text" id="supporting_document" name="supporting_document" required>
+        <input type="text" id="supporting_document" name="supporting_document" value="All Supporting Documents" required>
         <br>
         <button type="button" id="prev_documents">Previous</button>
         <button type="submit">Submit</button>
     </div>
+
 </form>
 
 <script>
