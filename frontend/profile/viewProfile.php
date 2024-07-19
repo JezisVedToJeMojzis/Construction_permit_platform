@@ -9,7 +9,7 @@ $isOrganization = ($_SESSION['account_role'] === 'organization');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/profile.css">
     <title>Profile</title>
 </head>
 <body>
@@ -24,65 +24,25 @@ $isOrganization = ($_SESSION['account_role'] === 'organization');
 
 <div class="content">
     <h2>Profile</h2>
-    <div class="profile-field">
-        <label>Email:</label>
-        <span><?php echo $_SESSION['account_email']; ?></span>
-    </div>
-    <div class="profile-field">
-        <label>Phone Number:</label>
-        <span><?php echo $_SESSION['phone_number']; ?></span>
-    </div>
-    <div class="profile-field">
-        <label>Street:</label>
-        <span><?php echo $_SESSION['street']; ?></span>
-    </div>
-    <div class="profile-field">
-        <label>House Number:</label>
-        <span><?php echo $_SESSION['house_number']; ?></span>
-    </div>
-    <div class="profile-field">
-        <label>City:</label>
-        <span><?php echo $_SESSION['city']; ?></span>
-    </div>
-    <div class="profile-field">
-        <label>Post Code:</label>
-        <span><?php echo $_SESSION['post_code']; ?></span>
-    </div>
-    <div class="profile-field">
-        <label>Country:</label>
-        <span><?php echo $_SESSION['country']; ?></span>
-    </div>
-    <?php if ($isPrivate): ?>
-        <div class="profile-field">
-            <label>First Name:</label>
-            <span><?php echo $_SESSION['first_name']; ?></span>
-        </div>
-        <div class="profile-field">
-            <label>Last Name:</label>
-            <span><?php echo $_SESSION['last_name']; ?></span>
-        </div>
-        <div class="profile-field">
-            <label>Identification Number:</label>
-            <span><?php echo $_SESSION['identification_number']; ?></span>
-        </div>
-    <?php elseif ($isOrganization): ?>
-        <div class="profile-field">
-            <label>Organization Name:</label>
-            <span><?php echo $_SESSION['organization_name']; ?></span>
-        </div>
-        <div class="profile-field">
-            <label>Contact Person First Name:</label>
-            <span><?php echo $_SESSION['contact_first_name']; ?></span>
-        </div>
-        <div class="profile-field">
-            <label>Contact Person Last Name:</label>
-            <span><?php echo $_SESSION['contact_last_name']; ?></span>
-        </div>
-        <div class="profile-field">
-            <label>Registration Number:</label>
-            <span><?php echo $_SESSION['registration_number']; ?></span>
-        </div>
-    <?php endif; ?>
+    <ul class="profile-info">
+        <li><strong>Email:</strong> <?php echo htmlspecialchars($_SESSION['account_email']); ?></li>
+        <li><strong>Phone Number:</strong> <?php echo htmlspecialchars($_SESSION['phone_number']); ?></li>
+        <li><strong>Street:</strong> <?php echo htmlspecialchars($_SESSION['street']); ?></li>
+        <li><strong>House Number:</strong> <?php echo htmlspecialchars($_SESSION['house_number']); ?></li>
+        <li><strong>City:</strong> <?php echo htmlspecialchars($_SESSION['city']); ?></li>
+        <li><strong>Post Code:</strong> <?php echo htmlspecialchars($_SESSION['post_code']); ?></li>
+        <li><strong>Country:</strong> <?php echo htmlspecialchars($_SESSION['country']); ?></li>
+        <?php if ($isPrivate): ?>
+            <li><strong>First Name:</strong> <?php echo htmlspecialchars($_SESSION['first_name']); ?></li>
+            <li><strong>Last Name:</strong> <?php echo htmlspecialchars($_SESSION['last_name']); ?></li>
+            <li><strong>Identification Number:</strong> <?php echo htmlspecialchars($_SESSION['identification_number']); ?></li>
+        <?php elseif ($isOrganization): ?>
+            <li><strong>Organization Name:</strong> <?php echo htmlspecialchars($_SESSION['organization_name']); ?></li>
+            <li><strong>Contact Person First Name:</strong> <?php echo htmlspecialchars($_SESSION['contact_first_name']); ?></li>
+            <li><strong>Contact Person Last Name:</strong> <?php echo htmlspecialchars($_SESSION['contact_last_name']); ?></li>
+            <li><strong>Registration Number:</strong> <?php echo htmlspecialchars($_SESSION['registration_number']); ?></li>
+        <?php endif; ?>
+    </ul>
 </div>
 </body>
 </html>

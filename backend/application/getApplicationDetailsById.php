@@ -17,7 +17,7 @@ try {
     $pdoManager = new PDOApplicationManager($serverName, $userName, $userPassword, $databaseName);
 
     // Get the application by ID
-    $application = $pdoManager->getApplicationById($applicationId);
+    $application = $pdoManager->getApplicationDetailsById($applicationId);
 
     echo json_encode($application);
 

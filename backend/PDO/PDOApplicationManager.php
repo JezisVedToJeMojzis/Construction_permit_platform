@@ -94,6 +94,12 @@ VALUES (:application_id, :territorial_decision, :ownership_document_or_contracto
             $stmtSupportingDocuments->bindParam(':document', $supportingDocument);
             $stmtSupportingDocuments->execute();
 
+            $description = "Application has been successfully submitted by user and created in the system";
+            $stmtLogs = $conn->prepare("INSERT INTO application_log (application_id, description, timestamp) VALUES (:application_id, :description, NOW())");
+            $stmtLogs->bindParam(':application_id', $applicationId);
+            $stmtLogs->bindParam(':description', $description);
+            $stmtLogs->execute();
+
             $conn=null;
 
         }catch (PDOException $e) {
@@ -167,7 +173,7 @@ VALUES (:application_id, :territorial_decision, :ownership_document_or_contracto
         }
     }
 
-    public function getApplicationById($applicationId) {
+    public function getApplicationDetailsById($applicationId) {
         try {
             $conn = new PDO(
                 "mysql:host=$this->serverName;dbname=$this->databaseName",
@@ -176,19 +182,71 @@ VALUES (:application_id, :territorial_decision, :ownership_document_or_contracto
             );
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            $stmt = $conn->prepare("SELECT 
-            a.id AS application_id,
-            a.account_id,
-            s.status AS status_status, 
-            a.role,
-            a.submission_date_and_time,
-            a.last_change
-            FROM 
-                application a
-            JOIN 
-                application_status s ON a.status_id = s.id
-            WHERE 
-                a.id = :application_id;");
+            $stmt = $conn->prepare("SELECT
+    a.id AS application_id,
+    a.account_id,
+    a.role,
+    s.status AS application_status,
+    a.submission_date_and_time,
+    a.last_change,
+    
+    
+    -- Property details
+    p.street,
+    p.house_number,
+    p.city,
+    p.post_code,
+    p.country,
+    p.parcel_number,
+    p.zoning_district,
+    p.current_use,
+    p.proposed_use,
+    
+    -- Project details
+    pr.title AS project_title,
+    pr.description AS project_description,
+    pr.type AS project_type,
+    pr.estimated_time,
+    pr.estimated_cost,
+    
+    -- Application documents
+    ad.territorial_decision,
+    ad.ownership_document_or_contractor_agreement,
+    ad.project_documentation,
+    ad.architectural_plan,
+    ad.designer_certificate,
+    ad.electricity_statement,
+    ad.water_statement,
+    ad.gas_statement,
+    ad.telecommunications_statement,
+    ad.road_statement,
+    ad.traffic_statement,
+    ad.environmental_statement,
+    
+    -- Supporting documents
+    asd.document AS supporting_document,
+    
+    -- Comments
+    ac.account_id AS comment_account_id,
+    ac.Comment AS comment,
+    ac.timestamp AS comment_timestamp,
+    
+    -- Logs
+    al.description AS log_description,
+    al.timestamp AS log_timestamp
+
+FROM
+    application a
+    LEFT JOIN application_status s ON a.status_id = s.id
+    LEFT JOIN property p ON a.id = p.application_id
+    LEFT JOIN project pr ON a.id = pr.application_id
+    LEFT JOIN application_documents ad ON a.id = ad.application_id
+    LEFT JOIN application_supporting_document asd ON ad.id = asd.application_documents_id
+    LEFT JOIN application_comment ac ON a.id = ac.application_id
+    LEFT JOIN application_log al ON a.id = al.application_id
+
+WHERE
+    a.id = :application_id;");
             $stmt->bindParam(':application_id', $applicationId);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
