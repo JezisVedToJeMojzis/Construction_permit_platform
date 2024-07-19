@@ -7,10 +7,11 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/dashboard.css">
     <title>User Dashboard</title>
+    <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <body>
+
 <div class="menu">
     <a href="user_dashboard.php">View Dashboard</a>
     <a href="../profile/viewProfile.php">View Profile</a>
@@ -19,6 +20,7 @@ session_start();
     <a href="viewObjections.php">View Objections</a>
     <a href="../../backend/authentication/logout.php">Log Out</a>
 </div>
+
 <div class="content">
     <h2>User Dashboard</h2>
 
@@ -32,15 +34,41 @@ session_start();
 
     <!-- Open Applications Section -->
     <h3>Open Applications</h3>
-    <ul id="openApplications">
-        <li>Loading...</li>
-    </ul>
+    <table id="openApplicationsTable">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Assigned Admin ID</th>
+            <th>Role</th>
+            <th>Submission Date</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td colspan="5">Loading...</td>
+        </tr>
+        </tbody>
+    </table>
 
     <!-- Closed Applications Section -->
     <h3>Closed Applications</h3>
-    <ul id="closedApplications">
-        <li>Loading...</li>
-    </ul>
+    <table id="closedApplicationsTable">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Assigned Admin ID</th>
+            <th>Role</th>
+            <th>Submission Date</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td colspan="5">Loading...</td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 
 <script>
@@ -48,42 +76,46 @@ session_start();
         const accountId = <?php echo json_encode($_SESSION["account_id"]); ?>;
 
         // Function to fetch and display applications
-        function fetchApplications(url, listId) {
+        function fetchApplications(url, tableId) {
             fetch(url + '?account_id=' + accountId)
                 .then(response => response.json())
                 .then(data => {
-                    const list = document.querySelector(`#${listId}`);
-                    list.innerHTML = ''; // Clear the loading item
+                    const tableBody = document.querySelector(`#${tableId} tbody`);
+                    tableBody.innerHTML = ''; // Clear the loading row
 
                     if (data.error) {
-                        list.innerHTML = `<li>${data.error}</li>`;
+                        tableBody.innerHTML = `<tr><td colspan="5">${data.error}</td></tr>`;
                         return;
                     }
 
                     if (data.length === 0) {
-                        list.innerHTML = `<li>No applications found.</li>`;
+                        tableBody.innerHTML = `<tr><td colspan="5">No applications found.</td></tr>`;
                     } else {
                         data.forEach(app => {
-                            const listItem = document.createElement('li');
-                            listItem.innerHTML = `
-                                <strong>ID:</strong> ${app.id} <br>
-                                <strong>Status:</strong> ${app.status_status} <br>
-                                <strong>Role:</strong> ${app.role} <br>
-                                <strong>Submission Date:</strong> ${app.submission_date_and_time}
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${app.id}</td>
+                                <td>${app.admin_id}</td>
+                                <td>${app.role}</td>
+                                <td>${app.submission_date_and_time}</td>
+                                <td>${app.status_status}</td>
                             `;
-                            list.appendChild(listItem);
+                            row.addEventListener('click', () => {
+                                window.location.href = `../application/applicationDetails.html?id=${app.id}`;
+                            });
+                            tableBody.appendChild(row);
                         });
                     }
                 })
                 .catch(error => {
-                    document.querySelector(`#${listId}`).innerHTML = `<li>Error loading data.</li>`;
+                    document.querySelector(`#${tableId} tbody`).innerHTML = `<tr><td colspan="5">Error loading data.</td></tr>`;
                     console.error('Error:', error);
                 });
         }
 
         // Fetch open and closed applications
-        fetchApplications('../../backend/application/getOpenApplications.php', 'openApplications');
-        fetchApplications('../../backend/application/getClosedApplications.php', 'closedApplications');
+        fetchApplications('../../backend/application/getAllOpenApplicationsByAccountId.php', 'openApplicationsTable');
+        fetchApplications('../../backend/application/getAllClosedApplicationsByAccountId.php', 'closedApplicationsTable');
     });
 </script>
 

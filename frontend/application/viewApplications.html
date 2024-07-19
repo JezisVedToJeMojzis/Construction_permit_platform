@@ -41,8 +41,9 @@
         <tr>
             <th>ID</th>
             <th>Account ID</th>
-            <th>Status Description</th>
+            <th>Admin ID</th>
             <th>Role</th>
+            <th>Status Description</th>
             <th>Submission Date and Time</th>
             <th>Last Change</th>
         </tr>
@@ -68,12 +69,12 @@
                 tableBody.innerHTML = '';  // Clear the loading row
 
                 if (data.error) {
-                    tableBody.innerHTML = `<tr><td colspan="6">${data.error}</td></tr>`;
+                    tableBody.innerHTML = `<tr><td colspan="7">${data.error}</td></tr>`;
                     return;
                 }
 
                 if (data.length === 0) {
-                    tableBody.innerHTML = `<tr><td colspan="6">No applications found.</td></tr>`;
+                    tableBody.innerHTML = `<tr><td colspan="7">No applications found.</td></tr>`;
                 } else {
                     let filteredData = data;
                     if (searchId) {
@@ -88,8 +89,9 @@
                         row.innerHTML = `
                             <td>${app.id}</td>
                             <td>${app.account_id}</td>
-                            <td>${app.status_status}</td>
+                            <td>${app.admin_id}</td>
                             <td>${app.role}</td>
+                            <td>${app.status_status}</td>
                             <td>${app.submission_date_and_time}</td>
                             <td>${app.last_change}</td>
                         `;
@@ -101,7 +103,7 @@
                 }
             })
             .catch(error => {
-                document.querySelector('#applicationsTable tbody').innerHTML = `<tr><td colspan="6">Error loading data.</td></tr>`;
+                document.querySelector('#applicationsTable tbody').innerHTML = `<tr><td colspan="7">Error loading data.</td></tr>`;
                 console.error('Error:', error);
             });
     }

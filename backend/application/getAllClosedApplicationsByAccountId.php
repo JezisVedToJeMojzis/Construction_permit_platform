@@ -11,7 +11,7 @@ $databaseName = $config["database"];
 
 header('Content-Type: application/json');
 
-$accountId = isset($_GET['application_id']) ? intval($_GET['application_id']) : 0;
+$accountId = isset($_GET['account_id']) ? intval($_GET['account_id']) : 0;
 
 try {
     $pdoManager = new PDOApplicationManager($serverName, $userName, $userPassword, $databaseName);
