@@ -17,7 +17,7 @@ session_start();
     <a href="../profile/viewProfile.php">View Profile</a>
     <a href="../application/submitApplication.html">Submit Application</a>
     <a href="../application/viewApplications.html">View Applications</a>
-    <a href="viewObjections.php">View Objections</a>
+    <a href="../objection/viewObjections.html">View Objections</a>
     <a href="../../backend/authentication/logout.php">Log Out</a>
 </div>
 

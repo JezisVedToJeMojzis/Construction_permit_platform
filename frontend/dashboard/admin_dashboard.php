@@ -14,7 +14,7 @@ session_start();
 <div class="menu">
     <a href="admin_dashboard.php">View Dashboard</a>
     <a href="../application/viewApplications.html">View Applications</a>
-    <a href="viewObjections.php">View Objections</a>
+    <a href="../objection/viewObjections.html">View Objections</a>
     <a href="../../backend/authentication/logout.php">Log Out</a>
 </div>
 <div class="content">
