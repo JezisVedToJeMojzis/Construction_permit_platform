@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $pdoManager->postApplicationComment($applicationId, $accountId, $comment);
 
-    //header("Location: ../../frontend/applicationDetails.html?id=$applicationId");
+    //header("Location: ../../frontend/applicationDetails.php?id=$applicationId");
     exit();
 }
 ?>

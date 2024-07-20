@@ -1,3 +1,15 @@
+<?php
+session_start();
+
+// Check if user is logged in
+if (!isset($_SESSION['account_id'])) {
+    header('Location: ../authentication/login.php'); // Redirect to login page if not logged in
+    exit();
+}
+
+$account_id = $_SESSION['account_id'];
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +25,7 @@
     <a href="../profile/viewProfile.php">View Profile</a>
     <a href="submitApplication.html">Submit Application</a>
     <a href="viewApplications.html">View Applications</a>
-    <a href="../objection/viewObjections.html">View Objections</a>
+    <a href="../objection/viewObjections.php">View Objections</a>
     <a href="../../backend/authentication/logout.php">Log Out</a>
 </div>
 
@@ -22,6 +34,10 @@
 
     <!-- Raise Objection button -->
     <a href="../objection/submitObjection.html" id="raise-objection-btn" class="raise-objection-btn">Raise Objection</a>
+
+    <div id="withdraw-button-container">
+        <!-- Withdraw button will be inserted here if user is the owner -->
+    </div>
 
     <!-- General Information -->
     <div class="details-section">
@@ -132,6 +148,34 @@
                         const li = document.createElement('li');
                         li.innerHTML = `<strong>${key}:</strong> ${value === null || value === "null" ? 'Not available' : value}`;
                         generalInfoList.appendChild(li);
+                    }
+
+                    const withdrawBtnContainer = document.getElementById('withdraw-button-container');
+                    const withdrawBtn = document.createElement('a');
+                    withdrawBtn.href = `../../backend/application/withdrawApplication.php?application_id=${applicationId}`;
+                    withdrawBtn.id = 'withdraw-btn';
+                    withdrawBtn.className = 'withdraw-btn';
+                    withdrawBtn.innerText = 'Withdraw Application';
+
+                    // Add Withdraw Button if the logged-in user is the owner
+                    if (data.account_id == <?php echo $account_id; ?>) {
+                        withdrawBtnContainer.appendChild(withdrawBtn);
+                    }
+
+                    // Hide buttons based on status
+                    const status = data.application_status;
+                    if (status == "Withdrawn" || status == "Under Objection" || status == "Denied" || status == "Approved") {
+                        withdrawBtnContainer.style.display = 'none';
+                    } else {
+                        withdrawBtnContainer.style.display = 'block';
+                    }
+
+                    // Hide the Raise Objection button
+                    const raiseObjectionBtn = document.getElementById('raise-objection-btn');
+                    if (status == "Withdrawn" || status == "Under Objection" || status == "Denied" || status == "Approved") {
+                        raiseObjectionBtn.style.display = 'none';
+                    } else {
+                        raiseObjectionBtn.style.display = 'block';
                     }
 
                     // Populate Property Details
@@ -282,6 +326,7 @@
             this.querySelector('.arrow').classList.toggle('arrow-up', !isHidden);
         });
     });
+
 </script>
 
 </body>

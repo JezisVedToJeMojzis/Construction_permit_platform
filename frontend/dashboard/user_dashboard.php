@@ -101,7 +101,7 @@ session_start();
                                 <td>${app.status_status}</td>
                             `;
                             row.addEventListener('click', () => {
-                                window.location.href = `../application/applicationDetails.html?id=${app.id}`;
+                                window.location.href = `../application/applicationDetails.php`;
                             });
                             tableBody.appendChild(row);
                         });

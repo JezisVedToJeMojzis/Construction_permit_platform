@@ -331,4 +331,34 @@ WHERE
             echo "Error: " . $e->getMessage();
         }
     }
+
+    public function withdrawApplication($applicationId){
+        try {
+            $conn = new PDO(
+                "mysql:host=$this->serverName;dbname=$this->databaseName",
+                $this->userName,
+                $this->userPassword
+            );
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            // Change status to Withdrawn
+            $stmt = $conn->prepare("UPDATE application SET status_id = 10 WHERE id = :application_id");
+            $stmt->bindParam(':application_id', $applicationId);
+            $stmt->execute();
+
+            // Update logs
+            $description = "Application has been withdrawed by its creator";
+            $stmtLogs = $conn->prepare("INSERT INTO application_log (application_id, description, timestamp) VALUES (:application_id, :description, NOW())");
+            $stmtLogs->bindParam(':application_id', $applicationId);
+            $stmtLogs->bindParam(':description', $description);
+            $stmtLogs->execute();
+
+            $conn = null;
+
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
 }
