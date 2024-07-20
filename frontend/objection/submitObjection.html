@@ -19,7 +19,7 @@
     <div id="step_objection" class="form-section active">
         <h2>Objection Form</h2>
         <label for="application_id">Application ID: <span class="tooltip-icon" data-tooltip="Here will be very helpful information.">?</span></label>
-        <input type="text" id="application_id" name="application_id" required>
+        <input type="text" id="application_id" name="application_id" required readonly>
         <br>
         <label for="brief_summary">Brief summary: <span class="tooltip-icon" data-tooltip="Here will be very helpful information.">?</span></label>
         <input type="text" id="brief_summary" name="brief_summary" value="Summary" required>
@@ -36,16 +36,23 @@
         <button type="submit">Submit</button>
     </div>
 </form>
-</body>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const tooltips = document.querySelectorAll('.tooltip-icon');
+        const urlParams = new URLSearchParams(window.location.search);
+        const applicationId = urlParams.get('application_id');
 
+        // Set the application_id in the input field if available
+        if (applicationId) {
+            document.getElementById('application_id').value = applicationId;
+        }
+
+        // Tooltip handling
+        const tooltips = document.querySelectorAll('.tooltip-icon');
         tooltips.forEach(tooltip => {
             tooltip.addEventListener('click', function() {
                 const tooltipText = this.querySelector('::after');
                 const isVisible = window.getComputedStyle(tooltipText).opacity == 1;
-
                 if (isVisible) {
                     tooltipText.style.opacity = 0;
                 } else {
@@ -55,4 +62,5 @@
         });
     });
 </script>
+</body>
 </html>

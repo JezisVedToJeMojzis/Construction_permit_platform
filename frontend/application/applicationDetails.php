@@ -33,7 +33,7 @@ $account_id = $_SESSION['account_id'];
     <h1>Application Details</h1>
 
     <!-- Raise Objection button -->
-    <a href="../objection/submitObjection.html" id="raise-objection-btn" class="raise-objection-btn">Raise Objection</a>
+    <a href="#" id="raise-objection-btn" class="raise-objection-btn">Raise Objection</a>
 
     <div id="withdraw-button-container">
         <!-- Withdraw button will be inserted here if user is the owner -->
@@ -110,6 +110,11 @@ $account_id = $_SESSION['account_id'];
             return;
         }
 
+        // Update the Raise Objection button href
+        const raiseObjectionBtn = document.getElementById('raise-objection-btn');
+        raiseObjectionBtn.href = `../objection/submitObjection.html?application_id=${applicationId}`;
+
+
         function fetchDetails() {
             fetch(`../../backend/application/getApplicationDetailsById.php?application_id=${applicationId}`)
                 .then(response => response.json())
@@ -144,6 +149,7 @@ $account_id = $_SESSION['account_id'];
                         "Submission Date & Time": data.submission_date_and_time,
                         "Last Change": data.last_change
                     };
+
                     for (const [key, value] of Object.entries(generalInfo)) {
                         const li = document.createElement('li');
                         li.innerHTML = `<strong>${key}:</strong> ${value === null || value === "null" ? 'Not available' : value}`;
