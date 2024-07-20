@@ -1,116 +1,79 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multi-Step Form</title>
-    <style>
-        .form-section {
-            display: none; /* Hide all form sections by default */
-            margin-bottom: 20px;
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+class PDOObjectionManager
+{
+    private string $serverName;
+    private string $userName;
+    private string $userPassword;
+    private string $databaseName;
+
+    public function __construct($serverName, $userName, $userPassword, $databaseName)
+    {
+        $this->serverName = $serverName;
+        $this->userName = $userName;
+        $this->userPassword = $userPassword;
+        $this->databaseName = $databaseName;
+    }
+
+    public function submitObjection($accountId, $briefSummary, $detailedExplanation, $affectedParties, $supportingDocument, $applicationId)
+    {
+        try {
+            $conn = new PDO(
+                "mysql:host=$this->serverName;dbname=$this->databaseName",
+                $this->userName,
+                $this->userPassword
+            );
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            // Add objection
+            $stmtObjection = $conn->prepare("INSERT INTO objection (account_id, status_id, brief_summary, detailed_explanation, affected_parties, submission_date_and_time, last_change, application_id) 
+SELECT :account_id, 1, :brief_summary, :detailed_explanation, :affected_parties, NOW(), NOW(), :application_id 
+FROM application 
+WHERE id = :application_id AND status_id IN (7, 8);");
+            $stmtObjection->bindParam(':account_id', $accountId);
+            $stmtObjection->bindParam(':application_id', $applicationId);
+            $stmtObjection->bindParam(':brief_summary', $briefSummary);
+            $stmtObjection->bindParam(':detailed_explanation', $detailedExplanation);
+            $stmtObjection->bindParam(':affected_parties', $affectedParties);
+            $stmtObjection->execute();
+
+            $objectionId = $conn->lastInsertId();
+
+            //Add objection supporting document
+            $stmtSupportingDocuments = $conn->prepare("INSERT INTO objection_supporting_document (objection_id, document)
+            VALUES (:objection_id, :document)");
+            $stmtSupportingDocuments->bindParam(':objection_id', $objectionId);
+            $stmtSupportingDocuments->bindParam(':document', $supportingDocument);
+            $stmtSupportingDocuments->execute();
+
+            // Add objection log
+            $descriptionObjectionLog = "Objection against application (id: " . $applicationId . ") has been submitted and created";
+            $stmtObjectionLog = $conn->prepare("INSERT INTO objection_log (objection_id, description, timestamp) VALUES (:objection_id, :description, NOW())");
+            $stmtObjectionLog->bindParam(':objection_id', $objectionId);
+            $stmtObjectionLog->bindParam(':description', $descriptionObjectionLog);
+            $stmtObjectionLog->execute();
+
+            // Change application status to under objection
+            $stmtApplicationStatus = $conn->prepare("UPDATE application SET status_id = 8 WHERE id = :application_id");
+            $stmtApplicationStatus->bindParam(':application_id', $applicationId);
+            $stmtApplicationStatus->execute();
+
+            // Add application log
+            $descriptionApplicationLog = "User (id: " . $accountId . ") has raised an objection (id: " . $objectionId . ")";
+            $stmtApplicationLog = $conn->prepare("INSERT INTO application_log (application_id, description, timestamp) VALUES (:application_id, :description, NOW())");
+            $stmtApplicationLog->bindParam(':application_id', $applicationId);
+            $stmtApplicationLog->bindParam(':description', $descriptionApplicationLog);
+            $stmtApplicationLog->execute();
+
+            $conn = null;
+
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
         }
-        .form-section.active {
-            display: block; /* Show only the active form section */
-        }
-    </style>
-</head>
-<body>
-<form id="multi_step_form" action="submit_application.php" method="post">
-    <!-- Step 1: Select Role -->
-    <div id="step_role" class="form-section active">
-        <h2>Select Role</h2>
-        <label>
-            <input type="radio" name="role" value="owner"> Owner
-        </label>
-        <label>
-            <input type="radio" name="role" value="contractor"> Contractor
-        </label>
-        <br>
-        <button type="button" id="next_role">Next</button>
-    </div>
-
-    <!-- Step 2: Property Information -->
-    <div id="step_property" class="form-section">
-        <h2>Property Information</h2>
-        <label for="street">Street:</label>
-        <input type="text" id="street" name="street" required>
-        <br>
-        <!-- Add other property fields -->
-        <button type="button" id="prev_property">Previous</button>
-        <button type="button" id="next_property">Next</button>
-    </div>
-
-    <!-- Step 3: Project Information -->
-    <div id="step_project" class="form-section">
-        <h2>Project Information</h2>
-        <label for="project_name">Project Name:</label>
-        <input type="text" id="project_name" name="project_name" required>
-        <br>
-        <!-- Add other project fields -->
-        <button type="button" id="prev_project">Previous</button>
-        <button type="submit">Submit</button>
-    </div>
-
-    <!-- Hidden input to store selected role -->
-    <input type="hidden" id="selected_role" name="selected_role" value="">
-</form>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const form = document.getElementById('multi_step_form');
-        const nextRoleBtn = document.getElementById('next_role');
-        const prevPropertyBtn = document.getElementById('prev_property');
-        const nextPropertyBtn = document.getElementById('next_property');
-        const prevProjectBtn = document.getElementById('prev_project');
-        const selectedRoleInput = document.getElementById('selected_role');
-
-        nextRoleBtn.addEventListener('click', function() {
-            const selectedRole = document.querySelector('input[name="role"]:checked');
-            if (selectedRole) {
-                selectedRoleInput.value = selectedRole.value;
-                document.getElementById('step_role').classList.remove('active');
-                document.getElementById('step_property').classList.add('active');
-            } else {
-                alert('Please select a role.');
-            }
-        });
-
-        prevPropertyBtn.addEventListener('click', function() {
-            document.getElementById('step_property').classList.remove('active');
-            document.getElementById('step_role').classList.add('active');
-        });
-
-        nextPropertyBtn.addEventListener('click', function() {
-            document.getElementById('step_property').classList.remove('active');
-            document.getElementById('step_project').classList.add('active');
-        });
-
-        prevProjectBtn.addEventListener('click', function() {
-            document.getElementById('step_project').classList.remove('active');
-            document.getElementById('step_property').classList.add('active');
-        });
-
-        form.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
-
-            // Collect all form data
-            const formData = new FormData(form);
-
-            // Example using Fetch API to submit data
-            fetch('submit_application.php', {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => response.json())
-                .then(data => {
-                    // Handle response from server (if needed)
-                    console.log(data);
-                    // Optionally redirect or show confirmation
-                })
-                .catch(error => console.error('Error:', error));
-        });
-    });
-</script>
-
-
-</body>
-</html>
+    }
+}
+?>
