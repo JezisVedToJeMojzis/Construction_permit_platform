@@ -4,6 +4,10 @@ require_once "../PDO/PDOLogManager.php";
 
 $config = require_once "../config.php";
 
+if (!isset($config["servername"], $config["username"], $config["password"], $config["database"])) {
+    die("Configuration error: Missing database credentials.");
+}
+
 $serverName = $config["servername"];
 $userName = $config["username"];
 $userPassword = $config["password"];

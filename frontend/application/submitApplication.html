@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/submitApplicationForm.css">
+    <link rel="stylesheet" href="../css/application/submitApplication.css">
     <title>Submit New Application</title>
 </head>
 <body>
@@ -20,10 +20,14 @@
     <div id="step_role" class="form-section active">
         <h2>Select Role</h2>
         <label>
-            <input type="radio" name="selected_role" value="owner"> Owner
+            <input type="radio" name="selected_role" value="owner">
+            Owner
+            <span class="tooltip-icon" data-tooltip="Select if you are the property owner.">?</span>
         </label>
         <label>
-            <input type="radio" name="selected_role" value="contractor"> Contractor
+            <input type="radio" name="selected_role" value="contractor">
+            Contractor
+            <span class="tooltip-icon" data-tooltip="Select if you are a contractor working on the project.">?</span>
         </label>
         <br>
         <button type="button" id="next_role">Next</button>
@@ -32,31 +36,58 @@
     <!-- Step 2: Property Information -->
     <div id="step_property" class="form-section">
         <h2>Property Information</h2>
-        <label for="street">Street:</label>
+        <label for="street">
+            Street:
+            <span class="tooltip-icon" data-tooltip="Enter the street address of the property.">?</span>
+        </label>
         <input type="text" id="street" name="street" value="Example Street" required>
         <br>
-        <label for="house_number">House number:</label>
+        <label for="house_number">
+            House number:
+            <span class="tooltip-icon" data-tooltip="Enter the house number of the property.">?</span>
+        </label>
         <input type="text" id="house_number" name="house_number" value="123" required>
         <br>
-        <label for="city">City:</label>
+        <label for="city">
+            City:
+            <span class="tooltip-icon" data-tooltip="Enter the city where the property is located.">?</span>
+        </label>
         <input type="text" id="city" name="city" value="Sample City" required>
         <br>
-        <label for="post_code">Post code:</label>
+        <label for="post_code">
+            Post code:
+            <span class="tooltip-icon" data-tooltip="Enter the postal code of the property.">?</span>
+        </label>
         <input type="text" id="post_code" name="post_code" value="12345" required>
         <br>
-        <label for="country">Country:</label>
+        <label for="country">
+            Country:
+            <span class="tooltip-icon" data-tooltip="Enter the country where the property is located.">?</span>
+        </label>
         <input type="text" id="country" name="country" value="Countryland" required>
         <br>
-        <label for="parcel_number">Parcel number:</label>
+        <label for="parcel_number">
+            Parcel number:
+            <span class="tooltip-icon" data-tooltip="Enter the parcel number of the property.">?</span>
+        </label>
         <input type="text" id="parcel_number" name="parcel_number" value="P123456" required>
         <br>
-        <label for="zoning_district">Zoning district:</label>
+        <label for="zoning_district">
+            Zoning district:
+            <span class="tooltip-icon" data-tooltip="Enter the zoning district of the property.">?</span>
+        </label>
         <input type="text" id="zoning_district" name="zoning_district" value="Residential" required>
         <br>
-        <label for="current_use">Current use:</label>
+        <label for="current_use">
+            Current use:
+            <span class="tooltip-icon" data-tooltip="Enter the current use of the property.">?</span>
+        </label>
         <input type="text" id="current_use" name="current_use" value="Residential" required>
         <br>
-        <label for="proposed_use">Proposed use:</label>
+        <label for="proposed_use">
+            Proposed use:
+            <span class="tooltip-icon" data-tooltip="Enter the proposed use of the property.">?</span>
+        </label>
         <input type="text" id="proposed_use" name="proposed_use" value="Commercial" required>
         <br>
         <button type="button" id="prev_property">Previous</button>
@@ -66,13 +97,22 @@
     <!-- Step 3: Project Information -->
     <div id="step_project" class="form-section">
         <h2>Project Information</h2>
-        <label for="project_title">Project title:</label>
+        <label for="project_title">
+            Project title:
+            <span class="tooltip-icon" data-tooltip="Enter the title of the project.">?</span>
+        </label>
         <input type="text" id="project_title" name="project_title" value="New Building Project" required>
         <br>
-        <label for="project_description">Project description:</label>
+        <label for="project_description">
+            Project description:
+            <span class="tooltip-icon" data-tooltip="Enter a brief description of the project.">?</span>
+        </label>
         <input type="text" id="project_description" name="project_description" value="Construction of a new office building" required>
         <br>
-        <label for="project_type">Project type:</label>
+        <label for="project_type">
+            Project type:
+            <span class="tooltip-icon" data-tooltip="Select the type of project.">?</span>
+        </label>
         <select id="project_type" name="project_type" required>
             <option value="">Select type</option>
             <option value="construction" selected>Construction</option>
@@ -80,10 +120,16 @@
             <option value="demolition">Demolition</option>
         </select>
         <br>
-        <label for="estimated_time">Estimated time (in months):</label>
+        <label for="estimated_time">
+            Estimated time (in months):
+            <span class="tooltip-icon" data-tooltip="Enter the estimated time for project completion in months.">?</span>
+        </label>
         <input type="text" id="estimated_time" name="estimated_time" value="12" required>
         <br>
-        <label for="estimated_cost">Estimated cost (in €):</label>
+        <label for="estimated_cost">
+            Estimated cost (in €):
+            <span class="tooltip-icon" data-tooltip="Enter the estimated cost of the project in euros.">?</span>
+        </label>
         <input type="text" id="estimated_cost" name="estimated_cost" value="1000000" required>
         <br>
         <button type="button" id="prev_project">Previous</button>
@@ -93,58 +139,120 @@
     <!-- Step 4: Documents -->
     <div id="step_documents" class="form-section">
         <h2>Documents</h2>
-        <label for="territorial_decision">Territorial decision:</label>
+        <label for="territorial_decision">
+            Territorial decision:
+            <span class="tooltip-icon" data-tooltip="Enter the status of the territorial decision.">?</span>
+        </label>
         <input type="text" id="territorial_decision" name="territorial_decision" value="Approved" required>
         <br>
-        <label for="ownership_document_or_contractor_agreement">Legal document (ownership/contractorship):</label>
+        <label for="ownership_document_or_contractor_agreement">
+            Legal document (ownership/contractorship):
+            <span class="tooltip-icon" data-tooltip="Enter the legal document for ownership or contractorship.">?</span>
+        </label>
         <input type="text" id="ownership_document_or_contractor_agreement" name="ownership_document_or_contractor_agreement" value="Ownership Document" required>
         <br>
-        <label for="project_documentation">Project documentation:</label>
+        <label for="project_documentation">
+            Project documentation:
+            <span class="tooltip-icon" data-tooltip="Enter the project documentation details.">?</span>
+        </label>
         <input type="text" id="project_documentation" name="project_documentation" value="Complete Documentation" required>
         <br>
-        <label for="architectural_plan">Architectural plan:</label>
+        <label for="architectural_plan">
+            Architectural plan:
+            <span class="tooltip-icon" data-tooltip="Enter details about the architectural plan.">?</span>
+        </label>
         <input type="text" id="architectural_plan" name="architectural_plan" value="Detailed Specifications" required>
         <br>
-        <label for="construction_specification">Construction specification:</label>
+        <label for="construction_specification">
+            Construction specification:
+            <span class="tooltip-icon" data-tooltip="Enter details about the construction specification.">?</span>
+        </label>
         <input type="text" id="construction_specification" name="construction_specification" value="Detailed Specifications" required>
         <br>
-        <label for="designer_certificate">Certificate of competence of the designer:</label>
+        <label for="designer_certificate">
+            Certificate of competence of the designer:
+            <span class="tooltip-icon" data-tooltip="Enter the certificate of competence of the designer.">?</span>
+        </label>
         <input type="text" id="designer_certificate" name="designer_certificate" value="Certified" required>
         <br>
-        <label for="supervision_declaration">Declaration of construction supervision:</label>
+        <label for="supervision_declaration">
+            Declaration of construction supervision:
+            <span class="tooltip-icon" data-tooltip="Enter the declaration of construction supervision.">?</span>
+        </label>
         <input type="text" id="supervision_declaration" name="supervision_declaration" value="Supervised" required>
         <br>
-        <label for="electricity_statement">Statement from electricity networks administrator:</label>
+        <label for="electricity_statement">
+            Statement from electricity networks administrator:
+            <span class="tooltip-icon" data-tooltip="Enter the statement from the electricity networks administrator.">?</span>
+        </label>
         <input type="text" id="electricity_statement" name="electricity_statement" value="Provided" required>
         <br>
-        <label for="water_statement">Statement from water networks administrator:</label>
+        <label for="water_statement">
+            Statement from water networks administrator:
+            <span class="tooltip-icon" data-tooltip="Enter the statement from the water networks administrator.">?</span>
+        </label>
         <input type="text" id="water_statement" name="water_statement" value="Provided" required>
         <br>
-        <label for="gas_statement">Statement from gas networks administrator:</label>
+        <label for="gas_statement">
+            Statement from gas networks administrator:
+            <span class="tooltip-icon" data-tooltip="Enter the statement from the gas networks administrator.">?</span>
+        </label>
         <input type="text" id="gas_statement" name="gas_statement" value="Provided" required>
         <br>
-        <label for="telecommunications_statement">Statement from telecommunications networks administrator:</label>
+        <label for="telecommunications_statement">
+            Statement from telecommunications networks administrator:
+            <span class="tooltip-icon" data-tooltip="Enter the statement from the telecommunications networks administrator.">?</span>
+        </label>
         <input type="text" id="telecommunications_statement" name="telecommunications_statement" value="Provided" required>
         <br>
-        <label for="road_statement">Statement from road administrator:</label>
+        <label for="road_statement">
+            Statement from road administrator:
+            <span class="tooltip-icon" data-tooltip="Enter the statement from the road administrator.">?</span>
+        </label>
         <input type="text" id="road_statement" name="road_statement" value="Provided" required>
         <br>
-        <label for="traffic_statement">Statement from traffic inspectorate:</label>
+        <label for="traffic_statement">
+            Statement from traffic inspectorate:
+            <span class="tooltip-icon" data-tooltip="Enter the statement from the traffic inspectorate.">?</span>
+        </label>
         <input type="text" id="traffic_statement" name="traffic_statement" value="Provided" required>
         <br>
-        <label for="environmental_statement">Statement from environmental authority:</label>
+        <label for="environmental_statement">
+            Statement from environmental authority:
+            <span class="tooltip-icon" data-tooltip="Enter the statement from the environmental authority.">?</span>
+        </label>
         <input type="text" id="environmental_statement" name="environmental_statement" value="Provided" required>
         <br>
-        <label for="supporting_document">Supporting documents:</label>
+        <label for="supporting_document">
+            Supporting documents:
+            <span class="tooltip-icon" data-tooltip="Enter details about any additional supporting documents.">?</span>
+        </label>
         <input type="text" id="supporting_document" name="supporting_document" value="All Supporting Documents" required>
         <br>
         <button type="button" id="prev_documents">Previous</button>
         <button type="submit">Submit</button>
     </div>
-
 </form>
 
+
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tooltips = document.querySelectorAll('.tooltip-icon');
+
+        tooltips.forEach(tooltip => {
+            tooltip.addEventListener('click', function() {
+                const tooltipText = this.querySelector('::after');
+                const isVisible = window.getComputedStyle(tooltipText).opacity == 1;
+
+                if (isVisible) {
+                    tooltipText.style.opacity = 0;
+                } else {
+                    tooltipText.style.opacity = 1;
+                }
+            });
+        });
+    });
+
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('multi_step_form');
         const nextRoleBtn = document.getElementById('next_role');

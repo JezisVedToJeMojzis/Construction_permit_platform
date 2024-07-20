@@ -32,6 +32,27 @@ body {
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #fff;
+    position: relative;
+}
+
+.raise-objection-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    border: none;
+    display: inline-block;
+    font-size: 16px;
+    text-align: center;
+}
+
+.raise-objection-btn:hover {
+    background-color: #0056b3;
 }
 
 h1 {
@@ -42,6 +63,10 @@ h1 {
 
 .details-section {
     margin-top: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    padding: 10px;
 }
 
 .details-section h2 {
@@ -62,6 +87,35 @@ h1 {
 }
 
 .details-section li:last-child {
+    border-bottom: none;
+}
+
+.logs-section, .comments-section {
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    padding: 10px;
+}
+
+.logs-section h2, .comments-section h2 {
+    margin-top: 0;
+    background-color: #f2f2f2;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.logs-section ul, .comments-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.logs-section li, .comments-section li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.logs-section li:last-child, .comments-section li:last-child {
     border-bottom: none;
 }
 
@@ -115,14 +169,6 @@ h1 {
 
 .comment-form button:focus {
     outline: none;
-}
-
-.content {
-    padding: 20px;
-}
-
-.details-section {
-    margin-bottom: 20px;
 }
 
 .hidden {

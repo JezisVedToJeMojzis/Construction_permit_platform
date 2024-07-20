@@ -29,9 +29,9 @@ class PDOObjectionManager
 
             // Add objection
             $stmtObjection = $conn->prepare("INSERT INTO objection (account_id, status_id, brief_summary, detailed_explanation, affected_parties, submission_date_and_time, last_change, application_id) 
-SELECT :account_id, 1, :brief_summary, :detailed_explanation, :affected_parties, NOW(), NOW(), :application_id 
-FROM application 
-WHERE id = :application_id AND status_id IN (7, 8);");
+            SELECT :account_id, 1, :brief_summary, :detailed_explanation, :affected_parties, NOW(), NOW(), :application_id 
+            FROM application 
+            WHERE id = :application_id AND status_id = 8;");
             $stmtObjection->bindParam(':account_id', $accountId);
             $stmtObjection->bindParam(':application_id', $applicationId);
             $stmtObjection->bindParam(':brief_summary', $briefSummary);
@@ -41,14 +41,14 @@ WHERE id = :application_id AND status_id IN (7, 8);");
 
             $objectionId = $conn->lastInsertId();
 
-            //Add objection supporting document
+           // Add objection supporting document
             $stmtSupportingDocuments = $conn->prepare("INSERT INTO objection_supporting_document (objection_id, document)
             VALUES (:objection_id, :document)");
             $stmtSupportingDocuments->bindParam(':objection_id', $objectionId);
             $stmtSupportingDocuments->bindParam(':document', $supportingDocument);
             $stmtSupportingDocuments->execute();
 
-            // Add objection log
+          //   Add objection log
             $descriptionObjectionLog = "Objection against application (id: " . $applicationId . ") has been submitted and created";
             $stmtObjectionLog = $conn->prepare("INSERT INTO objection_log (objection_id, description, timestamp) VALUES (:objection_id, :description, NOW())");
             $stmtObjectionLog->bindParam(':objection_id', $objectionId);
@@ -56,7 +56,7 @@ WHERE id = :application_id AND status_id IN (7, 8);");
             $stmtObjectionLog->execute();
 
             // Change application status to under objection
-            $stmtApplicationStatus = $conn->prepare("UPDATE application SET status_id = 8 WHERE id = :application_id");
+            $stmtApplicationStatus = $conn->prepare("UPDATE application SET status_id = 9 WHERE id = :application_id");
             $stmtApplicationStatus->bindParam(':application_id', $applicationId);
             $stmtApplicationStatus->execute();
 

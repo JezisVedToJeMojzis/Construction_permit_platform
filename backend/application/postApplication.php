@@ -4,6 +4,10 @@ require_once "../PDO/PDOApplicationManager.php";
 
 $config = require_once "../config.php";
 
+if (!isset($config["servername"], $config["username"], $config["password"], $config["database"])) {
+    die("Configuration error: Missing database credentials.");
+}
+
 $serverName = $config["servername"];
 $userName = $config["username"];
 $userPassword = $config["password"];
@@ -12,7 +16,11 @@ $databaseName = $config["database"];
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $pdoManager = new PDOApplicationManager($serverName, $userName, $userPassword, $databaseName);
 
-    $accountId = $_SESSION['account_id'];
+    $accountId = $_SESSION["account_id"] ?? null;
+    if (!$accountId) {
+        die("Error: User session expired or invalid.");
+    }
+
     $role = isset($_POST['selected_role']) ? $_POST['selected_role'] : '';
     $application_description = isset($_POST['application_description']) ? $_POST['application_description'] : '';
     $street = $_POST['street'];

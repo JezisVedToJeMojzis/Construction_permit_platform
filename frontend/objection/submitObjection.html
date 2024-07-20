@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/objection/submitObjection.css">
+    <title>Submit New Objection</title>
+</head>
+<body>
+<div class="menu">
+    <a href="../dashboard/user_dashboard.php">View Dashboard</a>
+    <a href="../profile/viewProfile.php">View Profile</a>
+    <a href="../application/submitApplication.html">Submit Application</a>
+    <a href="../application/viewApplications.html">View Applications</a>
+    <a href="../application/viewObjections.php">View Objections</a>
+    <a href="../../backend/authentication/logout.php">Log Out</a>
+</div>
+<form id="multi_step_form" action="../../backend/objection/postObjection.php" method="post">
+    <div id="step_objection" class="form-section active">
+        <h2>Objection Form</h2>
+        <label for="application_id">Application ID: <span class="tooltip-icon" data-tooltip="Here will be very helpful information.">?</span></label>
+        <input type="text" id="application_id" name="application_id" required>
+        <br>
+        <label for="brief_summary">Brief summary: <span class="tooltip-icon" data-tooltip="Here will be very helpful information.">?</span></label>
+        <input type="text" id="brief_summary" name="brief_summary" value="Summary" required>
+        <br>
+        <label for="detailed_explanation">Detailed explanation: <span class="tooltip-icon" data-tooltip="Here will be very helpful information.">?</span></label>
+        <textarea id="detailed_explanation" name="detailed_explanation" rows="5" required>Full Explanation</textarea>
+        <br>
+        <label for="affected_parties">Affected parties: <span class="tooltip-icon" data-tooltip="Here will be very helpful information.">?</span></label>
+        <input type="text" id="affected_parties" name="affected_parties" value="5 Parties" required>
+        <br>
+        <label for="supporting_documents">Supporting documents (evidence): <span class="tooltip-icon" data-tooltip="Here will be very helpful information.">?</span></label>
+        <input type="text" id="supporting_documents" name="supporting_documents" value="Evidence" required>
+        <br>
+        <button type="submit">Submit</button>
+    </div>
+</form>
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tooltips = document.querySelectorAll('.tooltip-icon');
+
+        tooltips.forEach(tooltip => {
+            tooltip.addEventListener('click', function() {
+                const tooltipText = this.querySelector('::after');
+                const isVisible = window.getComputedStyle(tooltipText).opacity == 1;
+
+                if (isVisible) {
+                    tooltipText.style.opacity = 0;
+                } else {
+                    tooltipText.style.opacity = 1;
+                }
+            });
+        });
+    });
+</script>
+</html>

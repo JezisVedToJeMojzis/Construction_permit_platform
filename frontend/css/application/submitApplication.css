@@ -44,16 +44,22 @@ body {
 }
 
 label {
-    display: inline-block;
-    width: 120px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    position: relative;
     font-weight: bold;
+}
+
+label .tooltip-icon {
+    margin-left: 10px;
 }
 
 input[type="text"],
 input[type="number"],
 select,
 textarea {
-    width: calc(100% - 120px);
+    width: calc(100% - 140px);
     padding: 8px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
@@ -87,4 +93,43 @@ button[type="submit"]:hover {
 
 #step_role #next_role {
     margin-top: 40px;
+}
+
+.tooltip-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    font-size: 14px;
+    color: #007bff;
+    background-color: #f9f9f9;
+    border: 1px solid #007bff;
+    border-radius: 50%;
+    cursor: help;
+    margin-left: 10px;
+    position: relative;
+}
+
+.tooltip-icon::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateX(10px) translateY(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.tooltip-icon:hover::after {
+    opacity: 1;
+    visibility: visible;
 }
