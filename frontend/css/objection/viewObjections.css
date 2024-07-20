@@ -25,21 +25,6 @@ body {
     color: black;
 }
 
-.register-btn,
-.login-btn {
-    display: inline-block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    background-color: #4CAF50;
-}
-
-.register-btn:hover,
-.login-btn:hover {
-    background-color: #45a049;
-}
-
 .content {
     max-width: 1000px;
     margin: 20px auto;
@@ -115,4 +100,17 @@ tr:nth-child(even) {
 tr:hover {
     background-color: #f1f1f1;
     cursor: pointer;
+}
+
+table th,
+table td {
+    text-align: left;
+}
+
+table {
+    border: 1px solid #ddd;
+}
+
+thead th {
+    background-color: #f4f4f4;
 }

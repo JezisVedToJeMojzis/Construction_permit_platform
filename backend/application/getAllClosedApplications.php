@@ -18,7 +18,7 @@ header('Content-Type: application/json');
 try {
     $pdoManager = new PDOApplicationManager($serverName, $userName, $userPassword, $databaseName);
 
-    // Get all applications
+    // Get all closed applications
     $applications = $pdoManager->getAllClosedApplications();
 
 } catch (Exception $e) {

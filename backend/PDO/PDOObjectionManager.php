@@ -75,5 +75,70 @@ class PDOObjectionManager
             echo "Error: " . $e->getMessage();
         }
     }
+
+    public function getAllClosedObjections() {
+        try {
+            $conn = new PDO(
+                "mysql:host=$this->serverName;dbname=$this->databaseName",
+                $this->userName,
+                $this->userPassword
+            );
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $stmt = $conn->prepare("SELECT 
+                o.*, 
+                s.status AS status_status 
+            FROM 
+                objection o
+            JOIN 
+                objection_status s ON o.status_id = s.id
+            WHERE 
+                o.status_id IN (3, 5, 6)
+            ");
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $conn = null;
+            return $result;
+
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+
+    public function getAllOpenObjections() {
+        try {
+            $conn = new PDO(
+                "mysql:host=$this->serverName;dbname=$this->databaseName",
+                $this->userName,
+                $this->userPassword
+            );
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $stmt = $conn->prepare("SELECT 
+                o.*, 
+                s.status AS status_status 
+            FROM 
+                objection o
+            JOIN 
+                objection_status s ON o.status_id = s.id
+            WHERE 
+                o.status_id NOT IN (3, 5, 6)
+            ");
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $conn = null;
+            return $result;
+
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+
 }
 ?>
