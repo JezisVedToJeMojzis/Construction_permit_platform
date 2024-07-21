@@ -140,5 +140,74 @@ class PDOObjectionManager
         }
     }
 
+    public function getAllOpenObjectionsByAccountId($accountId) {
+        try {
+            $conn = new PDO(
+                "mysql:host=$this->serverName;dbname=$this->databaseName",
+                $this->userName,
+                $this->userPassword
+            );
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $stmt = $conn->prepare("
+            SELECT 
+                o.*,
+                s.status AS status_status
+            FROM 
+                objection o
+            JOIN 
+                objection_status s ON o.status_id = s.id
+            WHERE 
+                o.account_id = :account_id 
+                AND o.status_id NOT IN (3, 5, 6)
+            ");
+            $stmt->bindParam(':account_id', $accountId);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $conn = null;
+            return $result;
+
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+
+    public function getAllClosedObjectionsByAccountId($accountId) {
+        try {
+            $conn = new PDO(
+                "mysql:host=$this->serverName;dbname=$this->databaseName",
+                $this->userName,
+                $this->userPassword
+            );
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $stmt = $conn->prepare("
+            SELECT 
+                o.*,
+                s.status AS status_status
+            FROM 
+                objection o
+            JOIN 
+                objection_status s ON o.status_id = s.id
+            WHERE 
+                o.account_id = :account_id 
+                AND o.status_id IN (3, 5, 6)
+            ");
+            $stmt->bindParam(':account_id', $accountId);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $conn = null;
+            return $result;
+
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
 }
 ?>
