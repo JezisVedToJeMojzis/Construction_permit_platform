@@ -209,5 +209,65 @@ class PDOObjectionManager
             echo "Error: " . $e->getMessage();
         }
     }
+
+    public function getObjectionDetailsById($objectionId) {
+        try {
+            $conn = new PDO(
+                "mysql:host=$this->serverName;dbname=$this->databaseName",
+                $this->userName,
+                $this->userPassword
+            );
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            // Fetch main objection details
+            $stmt = $conn->prepare("SELECT
+            o.id AS objection_id,
+            o.application_id,
+            o.account_id,
+            o.admin_id,
+            s.status AS objection_status,
+            o.submission_date_and_time,
+            o.last_change,
+            o.brief_summary,
+            o.detailed_explanation,
+            o.affected_parties
+        FROM objection o
+        LEFT JOIN objection_status s ON o.status_id = s.id
+        WHERE o.id = :objection_id");
+            $stmt->bindParam(':objection_id', $objectionId);
+            $stmt->execute();
+            $objectionDetails = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$objectionDetails) {
+                return null;
+            }
+
+            // Fetch supporting documents
+            $stmt = $conn->prepare("SELECT document FROM objection_supporting_document WHERE objection_id = :objection_id");
+            $stmt->bindParam(':objection_id', $objectionId);
+            $stmt->execute();
+            $objectionDetails['supporting_documents'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Fetch comments
+            $stmt = $conn->prepare("SELECT account_id AS comment_account_id, comment, timestamp AS comment_timestamp FROM objection_comment WHERE objection_id = :objection_id");
+            $stmt->bindParam(':objection_id', $objectionId);
+            $stmt->execute();
+            $objectionDetails['comments'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Fetch logs
+            $stmt = $conn->prepare("SELECT description AS log_description, timestamp AS log_timestamp FROM objection_log WHERE objection_id = :objection_id");
+            $stmt->bindParam(':objection_id', $objectionId);
+            $stmt->execute();
+            $objectionDetails['logs'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $conn = null;
+            return $objectionDetails;
+
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
 }
 ?>

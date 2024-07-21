@@ -25,7 +25,7 @@ $account_id = $_SESSION['account_id'];
     <a href="../profile/viewProfile.php">View Profile</a>
     <a href="submitApplication.html">Submit Application</a>
     <a href="viewApplications.html">View Applications</a>
-    <a href="../objection/viewObjections.php">View Objections</a>
+    <a href="../objection/viewObjections.html">View Objections</a>
     <a href="../../backend/authentication/logout.php">Log Out</a>
 </div>
 

@@ -110,7 +110,7 @@
                             <td>${new Date(obj.last_change).toLocaleString()}</td>
                         `;
                         row.addEventListener('click', () => {
-                            window.location.href = `objectionDetails.html?id=${obj.id}`;
+                            window.location.href = `objectionDetails.php?id=${obj.id}`;
                         });
                         tableBody.appendChild(row);
                     });
