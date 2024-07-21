@@ -13,7 +13,7 @@ if (!$objectionId) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Objection Details</title>
-    <link rel="stylesheet" href="../css/objection/objectionDetails.css">
+    <link rel="stylesheet" href="../../css/objection/objectionDetails.css">
 </head>
 <body>
 
@@ -95,12 +95,12 @@ if (!$objectionId) {
             fetch(`../../../backend/objection/getObjectionDetailsById.php?objection_id=${objectionId}`)
                 .then(response => response.json())
                 .then(data => {
+                    console.log(data)
                     const generalInfoList = document.querySelector('#generalInfoList');
                     const objectionDetailsList = document.querySelector('#objectionDetailsList');
                     const documentList = document.querySelector('#documentList');
                     const commentList = document.querySelector('#commentList');
                     const logList = document.querySelector('#logList');
-                    const adminButtonsContainer = document.getElementById('admin-buttons-container');
 
                     // Clear previous content
                     generalInfoList.innerHTML = '';
@@ -108,7 +108,6 @@ if (!$objectionId) {
                     documentList.innerHTML = '';
                     commentList.innerHTML = '';
                     logList.innerHTML = '';
-                    adminButtonsContainer.innerHTML = '';
 
                     if (data.error) {
                         generalInfoList.innerHTML = `<li>${data.error}</li>`;
@@ -118,7 +117,7 @@ if (!$objectionId) {
                     // Populate General Information
                     const generalInfo = {
                         "Objection ID": data.objection_id,
-                        "Application ID": `<a href="../application/applicationDetails.php?id=${data.application_id}">${data.application_id}</a>`,
+                        "Application ID": data.application_id,
                         "Account ID": data.account_id,
                         "Admin ID": data.admin_id,
                         "Status": data.objection_status,
@@ -143,6 +142,17 @@ if (!$objectionId) {
                         const li = document.createElement('li');
                         li.innerHTML = `<strong>${key}:</strong> ${value === null || value === "null" ? 'Not available' : value}`;
                         objectionDetailsList.appendChild(li);
+                    }
+
+
+                    // Populate Supporting Documents
+                    const supportingDocuments = {
+                        "Document": data.supporting_documents.map(doc => doc.document)
+                    };
+                    for (const [key, value] of Object.entries(supportingDocuments)) {
+                        const li = document.createElement('li');
+                        li.innerHTML = `<strong>${key}:</strong> ${value === null || value === "null" ? 'Not available' : value}`;
+                        documentList.appendChild(li);
                     }
 
                     // Fetch and Populate Comments
@@ -170,7 +180,7 @@ if (!$objectionId) {
                         });
 
                     // Fetch and Populate Logs
-                    fetch(`../../backend/objection/getAllLogsByObjectionId.php?objection_id=${objectionId}`)
+                    fetch(`../../../backend/objection/getAllLogsByObjectionId.php?objection_id=${objectionId}`)
                         .then(response => response.json())
                         .then(logsData => {
                             if (logsData.error) {
