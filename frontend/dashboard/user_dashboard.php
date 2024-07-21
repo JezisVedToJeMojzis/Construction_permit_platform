@@ -165,7 +165,7 @@ session_start();
                                 <td>${obj.status_status}</td>
                             `;
                             row.addEventListener('click', () => {
-                                window.location.href = `../objection/objectionDetails.php`;
+                                window.location.href = `../objection/objectionDetails.php?id=${obj.id}`;
                             });
                             objectionsTable.appendChild(row);
                         });

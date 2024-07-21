@@ -21,7 +21,7 @@ try {
     $pdoManager = new PDOObjectionManager($serverName, $userName, $userPassword, $databaseName);
 
     // Get the objection by ID
-    $objection = $pdoManager->getObjectionDetailsById(13);
+    $objection = $pdoManager->getObjectionDetailsById($objectionId);
 
     echo json_encode($objection);
 

@@ -20,7 +20,7 @@ try {
 
     $applicationId = $_GET['application_id'];
 
-    $applications = $pdoManager->withdrawApplication($applicationId);
+    $pdoManager->withdrawApplication($applicationId);
 
     header("Location: ../../frontend/application/viewApplications.html");
     exit();

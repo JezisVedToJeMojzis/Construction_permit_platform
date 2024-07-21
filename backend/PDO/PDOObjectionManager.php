@@ -269,5 +269,53 @@ class PDOObjectionManager
             echo "Error: " . $e->getMessage();
         }
     }
+
+    public function withdrawObjection($objectionId){
+        try {
+            $conn = new PDO(
+                "mysql:host=$this->serverName;dbname=$this->databaseName",
+                $this->userName,
+                $this->userPassword
+            );
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            // Change status to Withdrawn
+            $stmtObjectionStatus = $conn->prepare("UPDATE objection SET status_id = 3 WHERE id = :objection_id");
+            $stmtObjectionStatus->bindParam(':objection_id', $objectionId);
+            $stmtObjectionStatus->execute();
+
+            // Update objection logs
+            $description = "Objection has been withdrawed by its creator";
+            $stmtObjectionLogs = $conn->prepare("INSERT INTO objection_log (objection_id, description, timestamp) VALUES (:objection_id, :description, NOW())");
+            $stmtObjectionLogs->bindParam(':objection_id', $objectionId);
+            $stmtObjectionLogs->bindParam(':description', $description);
+            $stmtObjectionLogs->execute();
+
+            // Retrieve the application_id associated with the objection_id
+            $stmtApplicationId = $conn->prepare("SELECT application_id FROM objection WHERE id = :objection_id");
+            $stmtApplicationId->bindParam(':objection_id', $objectionId);
+            $stmtApplicationId->execute();
+            $applicationId = $stmtApplicationId->fetchColumn();
+
+            // Update application logs
+            $description = "Objection (id: " . $objectionId . ") has been withdrawed by its creator";
+            $stmtApplicationLogs = $conn->prepare("INSERT INTO application_log (application_id, description, timestamp) VALUES (:application_id, :description, NOW())");
+            $stmtApplicationLogs->bindParam(':application_id', $applicationId);
+            $stmtApplicationLogs->bindParam(':description', $description);
+            $stmtApplicationLogs->execute();
+
+            // Change status of application to Open for objections
+            $stmtApplicationStatus = $conn->prepare("UPDATE application SET status_id = 8 WHERE id = :application_id");
+            $stmtApplicationStatus->bindParam(':application_id', $applicationId);
+            $stmtApplicationStatus->execute();
+
+            $conn = null;
+
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
 }
 ?>

@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $affectedParties = $_POST["affected_parties"];
     $supportingDocument = $_POST["supporting_documents"];
 
-    $pdoManager->submitObjection(3, $briefSummary, $detailedExplanation, $affectedParties, $supportingDocument, $applicationId);
+    $pdoManager->submitObjection($accountId, $briefSummary, $detailedExplanation, $affectedParties, $supportingDocument, $applicationId);
 
     header("Location: ../../frontend/dashboard/user_dashboard.php");
     exit();
