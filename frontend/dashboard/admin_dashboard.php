@@ -13,8 +13,9 @@ session_start();
 <body>
 <div class="menu">
     <a href="admin_dashboard.php">View Dashboard</a>
-    <a href="../application/viewApplications.html">View Applications</a>
-    <a href="../objection/viewObjections.html">View Objections</a>
+    <a href="../admin/application/viewApplications.html">View Applications</a>
+    <a href="../admin/objection/viewObjections.html">View Objections</a>
+    <a href="../admin/account/viewAccounts.html">View Accounts</a>
     <a href="../../backend/authentication/logout.php">Log Out</a>
 </div>
 <div class="content">
@@ -33,23 +34,15 @@ session_start();
     <!-- Assigned Applications -->
     <h3>Assigned Applications</h3>
     <ul class="assigned-applications">
-        <!-- Sample data for demonstration -->
-        <!-- Replace with actual data fetched from your endpoint -->
         <li>Application ID: 12345</li>
         <li>Application ID: 67890</li>
-        <!-- If no assigned applications -->
-        <!-- <li>No assigned applications.</li> -->
     </ul>
 
-    <!-- Finished Applications -->
-    <h3>Finished Applications</h3>
-    <ul class="finished-applications">
-        <!-- Sample data for demonstration -->
-        <!-- Replace with actual data fetched from your endpoint -->
-        <li>Application ID: 54321</li>
-        <li>Application ID: 98765</li>
-        <!-- If no finished applications -->
-        <!-- <li>No finished applications.</li> -->
+    <!-- Assigned Objections -->
+    <h3>Assigned Objections</h3>
+    <ul class="assigned-objections">
+        <li>Objection ID: 54321</li>
+        <li>Objection ID: 98765</li>
     </ul>
 </div>
 </body>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accounts List</title>
+    <link rel="stylesheet" href="../../css/account/viewAccounts.css">
+    <style>
+        /* Ensure rows appear clickable */
+        tr.clickable {
+            cursor: pointer;
+        }
+        tr.clickable:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="menu">
+    <a href="../../dashboard/admin_dashboard.php">View Dashboard</a>
+    <a href="../application/viewApplications.html">View Applications</a>
+    <a href="../objection/viewObjections.html">View Objections</a>
+    <a href="viewAccounts.html">View Accounts</a>
+    <a href="../../../backend/authentication/logout.php">Log Out</a>
+</div>
+
+<div class="content">
+    <h1>Accounts List</h1>
+
+    <div class="controls">
+        <label><strong>Account Role:</strong></label>
+        <label><input type="radio" name="roleFilter" value="private" checked> Private Accounts</label>
+        <label><input type="radio" name="roleFilter" value="organization"> Organizational Accounts</label>
+    </div>
+
+    <div class="controls">
+        <label><strong>Search by Account ID:</strong></label>
+        <input type="text" id="searchIdInput" placeholder="Enter account ID">
+    </div>
+
+    <div class="controls">
+        <label><strong>Search by Email:</strong></label>
+        <input type="text" id="searchEmailInput" placeholder="Enter email">
+    </div>
+
+    <table id="accountsTable">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Role</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td colspan="3">Loading...</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function fetchAccounts(role, searchId = '', searchEmail = '') {
+        const endpoint = `../../../backend/account/getAllAccounts.php`;
+
+        fetch(endpoint)
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.querySelector('#accountsTable tbody');
+                tableBody.innerHTML = '';  // Clear the loading row
+
+                if (data.error) {
+                    tableBody.innerHTML = `<tr><td colspan="3">${data.error}</td></tr>`;
+                    return;
+                }
+
+                if (data.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="3">No accounts found.</td></tr>`;
+                } else {
+                    let filteredData = data.filter(account => account.role === role);
+
+                    if (searchId) {
+                        filteredData = filteredData.filter(acc => acc.id.toString() === searchId);
+                    }
+                    if (searchEmail) {
+                        filteredData = filteredData.filter(acc => acc.email.toLowerCase().includes(searchEmail.toLowerCase()));
+                    }
+
+                    filteredData.forEach(acc => {
+                        const row = document.createElement('tr');
+                        row.className = 'clickable';  // Add class for styling
+                        row.dataset.accountId = acc.id;  // Store account ID for later use
+
+                        row.innerHTML = `
+                            <td>${acc.id}</td>
+                            <td>${acc.email}</td>
+                            <td>${acc.role}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+
+                    // Add click event to rows
+                    tableBody.querySelectorAll('tr.clickable').forEach(row => {
+                        row.addEventListener('click', function() {
+                            const accountId = this.dataset.accountId;
+                            window.location.href = `accountDetails.php?account_id=${accountId}`;
+                        });
+                    });
+                }
+            })
+            .catch(error => {
+                document.querySelector('#accountsTable tbody').innerHTML = `<tr><td colspan="3">Error loading data.</td></tr>`;
+                console.error('Error:', error);
+            });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchAccounts('private'); // Default to private accounts
+
+        document.querySelectorAll('input[name="roleFilter"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const selectedRole = this.value;
+                fetchAccounts(selectedRole);
+            });
+        });
+
+        document.getElementById('searchIdInput').addEventListener('input', function() {
+            const searchId = this.value.trim();
+            const searchEmail = document.getElementById('searchEmailInput').value.trim();
+            const selectedRole = document.querySelector('input[name="roleFilter"]:checked').value;
+            fetchAccounts(selectedRole, searchId, searchEmail);
+        });
+
+        document.getElementById('searchEmailInput').addEventListener('input', function() {
+            const searchEmail = this.value.trim();
+            const searchId = document.getElementById('searchIdInput').value.trim();
+            const selectedRole = document.querySelector('input[name="roleFilter"]:checked').value;
+            fetchAccounts(selectedRole, searchId, searchEmail);
+        });
+    });
+</script>
+
+</body>
+</html>
