@@ -47,11 +47,11 @@
             <th>ID</th>
             <th>Account ID</th>
             <th>Application ID</th>
-            <th>Status ID</th>
             <th>Admin ID</th>
             <th>Brief Summary</th>
             <th>Detailed Explanation</th>
             <th>Affected Parties</th>
+            <th>Status</th>
             <th>Submission Date and Time</th>
             <th>Last Change</th>
         </tr>
@@ -101,11 +101,11 @@
                             <td>${obj.id}</td>
                             <td>${obj.account_id}</td>
                             <td>${obj.application_id}</td>
-                            <td>${obj.status_id}</td>
                             <td>${obj.admin_id}</td>
                             <td>${obj.brief_summary}</td>
                             <td>${obj.detailed_explanation}</td>
                             <td>${obj.affected_parties}</td>
+                            <td>${obj.status_status}</td>
                             <td>${new Date(obj.submission_date_and_time).toLocaleString()}</td>
                             <td>${new Date(obj.last_change).toLocaleString()}</td>
                         `;
