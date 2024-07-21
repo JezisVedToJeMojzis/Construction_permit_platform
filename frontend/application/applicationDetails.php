@@ -168,7 +168,7 @@ $account_id = $_SESSION['account_id'];
                         withdrawBtnContainer.appendChild(withdrawBtn);
                     }
 
-                    // Hide buttons based on status
+                    // Hide the Withdraw based on status
                     const status = data.application_status;
                     if (status == "Withdrawn" || status == "Under Objection" || status == "Denied" || status == "Approved") {
                         withdrawBtnContainer.style.display = 'none';
@@ -178,10 +178,10 @@ $account_id = $_SESSION['account_id'];
 
                     // Hide the Raise Objection button
                     const raiseObjectionBtn = document.getElementById('raise-objection-btn');
-                    if (status == "Withdrawn" || status == "Under Objection" || status == "Denied" || status == "Approved") {
-                        raiseObjectionBtn.style.display = 'none';
-                    } else {
+                    if (status == "Open for Objections") {
                         raiseObjectionBtn.style.display = 'block';
+                    } else {
+                        raiseObjectionBtn.style.display = 'none';
                     }
 
                     // Populate Property Details

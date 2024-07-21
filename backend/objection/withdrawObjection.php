@@ -22,7 +22,7 @@ try {
 
     echo $pdoManager->withdrawObjection($objectionId);
 
-    header("Location: ../../frontend/objection/viewObjections.html");
+    header("Location: ../../frontend/dashboard/user_dashboard.php");
     exit();
 
 } catch (Exception $e) {

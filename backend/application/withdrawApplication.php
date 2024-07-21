@@ -22,7 +22,7 @@ try {
 
     $pdoManager->withdrawApplication($applicationId);
 
-    header("Location: ../../frontend/application/viewApplications.html");
+    header("Location: ../../frontend/dashboard/user_dashboard.php");
     exit();
 
 } catch (Exception $e) {

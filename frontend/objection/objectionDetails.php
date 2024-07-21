@@ -124,7 +124,7 @@ $account_id = $_SESSION['account_id'];
                     // Populate General Information
                     const generalInfo = {
                         "Objection ID": data.objection_id,
-                        "Application ID": data.application_id,
+                        "Application ID": `<a href="../application/applicationDetails.php?id=${data.application_id}">${data.application_id}</a>`,
                         "Account ID": data.account_id,
                         "Admin ID": data.admin_id,
                         "Status": data.objection_status,
@@ -223,30 +223,6 @@ $account_id = $_SESSION['account_id'];
                     console.error('Error:', error);
                 });
         }
-
-        document.getElementById('submitCommentBtn').addEventListener('click', function() {
-            const commentText = document.getElementById('newComment').value.trim();
-            if (commentText === '') {
-                alert('Please enter a comment.');
-                return;
-            }
-
-            fetch('../../backend/objection/postCommentByObjectionId.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Accept': 'application/json'
-                },
-                body: new URLSearchParams({
-                    objection_id: objectionId,
-                    comment: commentText
-                })
-            }).then(() => {
-                document.getElementById('newComment').value = '';
-                fetchDetails();
-            });
-        });
-
 
         // Toggle comments section
         const toggleCommentBtn = document.getElementById('toggleCommentBtn');
