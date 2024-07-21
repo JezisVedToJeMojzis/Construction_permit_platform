@@ -117,7 +117,7 @@ if (!$objectionId) {
                     // Populate General Information
                     const generalInfo = {
                         "Objection ID": data.objection_id,
-                        "Application ID": data.application_id,
+                        "Application ID": `<a href="../application/applicationDetails.php?application_id=${data.application_id}">${data.application_id}</a>`,
                         "Account ID": data.account_id,
                         "Admin ID": data.admin_id,
                         "Status": data.objection_status,
