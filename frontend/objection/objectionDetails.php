@@ -170,44 +170,109 @@ $account_id = $_SESSION['account_id'];
                         objectionDetailsList.appendChild(li);
                     }
 
-                    // Populate Document Details
-                    if (data.supporting_documents.length > 0) {
-                        data.supporting_documents.forEach(doc => {
-                            const li = document.createElement('li');
-                            li.innerHTML = `<strong>Document:</strong> ${doc.document}`;
-                            documentList.appendChild(li);
-                        });
-                    } else {
-                        documentList.innerHTML = '<li>No supporting documents available.</li>';
-                    }
+                    // Fetch and Populate Comments
+                    fetch(`../../backend/objection/getAllCommentsByObjectionId.php?objection_id=${objectionId}`)
+                        .then(response => response.json())
+                        .then(commentsData => {
+                            if (commentsData.error) {
+                                commentList.innerHTML = `<li>${commentsData.error}</li>`;
+                                return;
+                            }
 
-                    // Populate Log Details
-                    if (data.logs.length > 0) {
-                        data.logs.forEach(log => {
-                            const li = document.createElement('li');
-                            li.innerHTML = `<strong>Description:</strong> ${log.log_description}, <strong>Timestamp:</strong> ${log.log_timestamp}`;
-                            logList.appendChild(li);
+                            if (commentsData.length > 0) {
+                                commentsData.forEach(comment => {
+                                    const li = document.createElement('li');
+                                    li.innerHTML = `<strong>Account ID:</strong> ${comment.account_id} (${comment.timestamp}) → ${comment.comment}`;
+                                    commentList.appendChild(li);
+                                });
+                            } else {
+                                commentList.innerHTML = `<li>No comments available.</li>`;
+                            }
+                        })
+                        .catch(error => {
+                            commentList.innerHTML = `<li>Error loading comments.</li>`;
+                            console.error('Error:', error);
                         });
-                    } else {
-                        logList.innerHTML = '<li>No logs available.</li>';
-                    }
 
-                    // Populate Comment Details
-                    if (data.comments.length > 0) {
-                        data.comments.forEach(comment => {
-                            const li = document.createElement('li');
-                            li.innerHTML = `<strong>Account ID:</strong> ${comment.comment_account_id}, <strong>Comment:</strong> ${comment.comment}, <strong>Timestamp:</strong> ${comment.comment_timestamp}`;
-                            commentList.appendChild(li);
+                    // Fetch and Populate Logs
+                    fetch(`../../backend/objection/getAllLogsByObjectionId.php?objection_id=${objectionId}`)
+                        .then(response => response.json())
+                        .then(logsData => {
+                            if (logsData.error) {
+                                logList.innerHTML = `<li>${logsData.error}</li>`;
+                                return;
+                            }
+
+                            if (logsData.length > 0) {
+                                logsData.forEach(log => {
+                                    const li = document.createElement('li');
+                                    li.innerHTML = `<strong>${log.timestamp}:</strong> ${log.description}`;
+                                    logList.appendChild(li);
+                                });
+                            } else {
+                                logList.innerHTML = `<li>No logs available.</li>`;
+                            }
+                        })
+                        .catch(error => {
+                            logList.innerHTML = `<li>Error loading logs.</li>`;
+                            console.error('Error:', error);
                         });
-                    } else {
-                        commentList.innerHTML = '<li>No comments available.</li>';
-                    }
                 })
                 .catch(error => {
-                    console.error('Error fetching objection details:', error);
-                    document.querySelector('#generalInfoList').innerHTML = `<li>An error occurred while fetching objection details.</li>`;
+                    document.querySelector('#generalInfoList').innerHTML = `<li>Error loading data.</li>`;
+                    console.error('Error:', error);
                 });
         }
+
+        document.getElementById('submitCommentBtn').addEventListener('click', function() {
+            const commentText = document.getElementById('newComment').value.trim();
+            if (commentText === '') {
+                alert('Please enter a comment.');
+                return;
+            }
+
+            fetch('../../backend/objection/postCommentByObjectionId.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': 'application/json'
+                },
+                body: new URLSearchParams({
+                    objection_id: objectionId,
+                    comment: commentText
+                })
+            }).then(() => {
+                document.getElementById('newComment').value = '';
+                fetchDetails();
+            });
+        });
+
+
+        // Toggle comments section
+        const toggleCommentBtn = document.getElementById('toggleCommentBtn');
+        const commentSection = document.getElementById('commentSection');
+        toggleCommentBtn.addEventListener('click', function() {
+            if (commentSection.classList.contains('hidden')) {
+                commentSection.classList.remove('hidden');
+                toggleCommentBtn.querySelector('.arrow').classList.add('arrow-up');
+            } else {
+                commentSection.classList.add('hidden');
+                toggleCommentBtn.querySelector('.arrow').classList.remove('arrow-up');
+            }
+        });
+
+        // Toggle logs section
+        const toggleLogBtn = document.getElementById('toggleLogBtn');
+        const logSection = document.getElementById('logSection');
+        toggleLogBtn.addEventListener('click', function() {
+            if (logSection.classList.contains('hidden')) {
+                logSection.classList.remove('hidden');
+                toggleLogBtn.querySelector('.arrow').classList.add('arrow-up');
+            } else {
+                logSection.classList.add('hidden');
+                toggleLogBtn.querySelector('.arrow').classList.remove('arrow-up');
+            }
+        });
 
         fetchDetails();
     });

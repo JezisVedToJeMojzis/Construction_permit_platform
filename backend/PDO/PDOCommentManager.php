@@ -69,4 +69,58 @@ class PDOCommentManager
         }
         return false;
     }
+
+    public function postObjectionComment($objectionId, $accountId, $comment)
+    {
+        try {
+            $conn = new PDO(
+                "mysql:host=$this->serverName;dbname=$this->databaseName",
+                $this->userName,
+                $this->userPassword
+            );
+
+            //Comment
+            $stmtComment = $conn->prepare("INSERT INTO objection_comment (objection_id, account_id, Comment, timestamp) VALUES (:objection_id, :account_id, :comment, NOW())");
+            $stmtComment->bindParam(':objection_id', $objectionId);
+            $stmtComment->bindParam(':account_id', $accountId);
+            $stmtComment->bindParam(':comment', $comment);
+            $stmtComment->execute();
+
+            // Related log
+            $description = "User (id: " . $accountId . ") left a comment on the objection (id: " . $objectionId . ")";
+            $stmtLogs = $conn->prepare("INSERT INTO objection_log (objection_id, description, timestamp) VALUES (:objection_id, :description, NOW())");
+            $stmtLogs->bindParam(':objection_id', $objectionId);
+            $stmtLogs->bindParam(':description', $description);
+            $stmtLogs->execute();
+
+            $conn = null;
+
+        } catch (PDOException $exception) {
+            echo "PDO exception: " . $exception->getMessage();
+        }
+        return false;
+    }
+
+    public function getAllObjectionCommentsByObjectionId($objectionId)
+    {
+        try {
+            $conn = new PDO(
+                "mysql:host=$this->serverName;dbname=$this->databaseName",
+                $this->userName,
+                $this->userPassword
+            );
+
+            $stmt = $conn->prepare("SELECT * FROM objection_comment WHERE objection_id = :objection_id");
+            $stmt->bindParam(':objection_id', $objectionId);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $conn = null;
+            return $result;
+
+        } catch (PDOException $exception) {
+            echo "PDO exception: " . $exception->getMessage();
+        }
+        return false;
+    }
 }

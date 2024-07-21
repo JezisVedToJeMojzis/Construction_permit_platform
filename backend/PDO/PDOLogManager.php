@@ -39,4 +39,28 @@ class PDOLogManager
             echo "Error: " . $e->getMessage();
         }
     }
+
+    public function getAllLogsByObjectionId($objectionId) {
+        try {
+            $conn = new PDO(
+                "mysql:host=$this->serverName;dbname=$this->databaseName",
+                $this->userName,
+                $this->userPassword
+            );
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $stmt = $conn->prepare("SELECT * FROM objection_log WHERE objection_id = :objection_id");
+            $stmt->bindParam(':objection_id', $objectionId);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $conn = null;
+            return $result;
+
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
 }
