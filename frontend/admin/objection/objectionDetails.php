@@ -167,7 +167,8 @@ if (!$objectionId) {
                             if (commentsData.length > 0) {
                                 commentsData.forEach(comment => {
                                     const li = document.createElement('li');
-                                    li.innerHTML = `<strong>Account ID:</strong> ${comment.account_id} (${comment.timestamp}) → ${comment.comment}`;
+                                    const userType = (comment.account_id == 1 || comment.account_id == 2) ? 'Admin' : 'User';
+                                    li.innerHTML = `<strong>${userType} ID:</strong> ${comment.account_id} (${comment.timestamp}) → ${comment.comment}`;
                                     commentList.appendChild(li);
                                 });
                             } else {
@@ -208,6 +209,29 @@ if (!$objectionId) {
                     console.error('Error:', error);
                 });
         }
+
+        document.getElementById('submitCommentBtn').addEventListener('click', function() {
+            const commentText = document.getElementById('newComment').value.trim();
+            if (commentText === '') {
+                alert('Please enter a comment.');
+                return;
+            }
+
+            fetch('../../../backend/objection/postCommentByObjectionId.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': 'application/json'
+                },
+                body: new URLSearchParams({
+                    objection_id: objectionId,
+                    comment: commentText
+                })
+            }).then(() => {
+                document.getElementById('newComment').value = '';
+                fetchDetails();
+            });
+        });
 
 
         // Toggle comments section

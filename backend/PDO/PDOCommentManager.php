@@ -33,7 +33,11 @@ class PDOCommentManager
             $stmtComment->execute();
 
             // Related log
-            $description = "User (id: " . $accountId . ") left a comment on the application (id: " . $applicationId . ")";
+            if (in_array($accountId, [1, 2])) {
+                $description = "Admin (id: " . $accountId . ") left a comment on the application (id: " . $applicationId . ")";
+            } else {
+                $description = "User (id: " . $accountId . ") left a comment on the application (id: " . $applicationId . ")";
+            }
             $stmtLogs = $conn->prepare("INSERT INTO application_log (application_id, description, timestamp) VALUES (:application_id, :description, NOW())");
             $stmtLogs->bindParam(':application_id', $applicationId);
             $stmtLogs->bindParam(':description', $description);
@@ -86,8 +90,15 @@ class PDOCommentManager
             $stmtComment->bindParam(':comment', $comment);
             $stmtComment->execute();
 
+
             // Related log
-            $description = "User (id: " . $accountId . ") left a comment on the objection (id: " . $objectionId . ")";
+            $description = "";
+            if (in_array($accountId, [1, 2])){
+                $description = "Admin (id: " . $accountId . ") left a comment on the objection (id: " . $objectionId . ")";
+            }
+            else{
+                $description = "User (id: " . $accountId . ") left a comment on the objection (id: " . $objectionId . ")";
+            }
             $stmtLogs = $conn->prepare("INSERT INTO objection_log (objection_id, description, timestamp) VALUES (:objection_id, :description, NOW())");
             $stmtLogs->bindParam(':objection_id', $objectionId);
             $stmtLogs->bindParam(':description', $description);

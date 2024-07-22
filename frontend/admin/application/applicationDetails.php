@@ -103,6 +103,7 @@ if (!$applicationId) {
             fetch(`../../../backend/application/getApplicationDetailsById.php?application_id=${applicationId}`)
                 .then(response => response.json())
                 .then(data => {
+                    console.log(data);
                     const generalInfoList = document.querySelector('#generalInfoList');
                     const propertyList = document.querySelector('#propertyList');
                     const projectList = document.querySelector('#projectList');
@@ -205,7 +206,8 @@ if (!$applicationId) {
                             if (commentsData.length > 0) {
                                 commentsData.forEach(comment => {
                                     const li = document.createElement('li');
-                                    li.innerHTML = `<strong>Account ID:</strong> ${comment.account_id} (${comment.timestamp}) → ${comment.Comment}`;
+                                    const userType = (comment.account_id == 1 || comment.account_id == 2) ? 'Admin' : 'User';
+                                    li.innerHTML = `<strong>${userType} ID:</strong> ${comment.account_id} (${comment.timestamp}) → ${comment.Comment}`;
                                     commentList.appendChild(li);
                                 });
                             } else {

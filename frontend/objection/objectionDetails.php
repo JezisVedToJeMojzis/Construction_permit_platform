@@ -182,7 +182,8 @@ $account_id = $_SESSION['account_id'];
                             if (commentsData.length > 0) {
                                 commentsData.forEach(comment => {
                                     const li = document.createElement('li');
-                                    li.innerHTML = `<strong>Account ID:</strong> ${comment.account_id} (${comment.timestamp}) → ${comment.comment}`;
+                                    const userType = (comment.account_id == 1 || comment.account_id == 2) ? 'Admin' : 'User';
+                                    li.innerHTML = `<strong>${userType} ID:</strong> ${comment.account_id} (${comment.timestamp}) → ${comment.comment}`;
                                     commentList.appendChild(li);
                                 });
                             } else {
