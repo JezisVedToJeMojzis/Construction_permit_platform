@@ -2,9 +2,160 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Objections List</title>
+    <link rel="stylesheet" href="../../css/objection/viewObjections.css">
 </head>
 <body>
+
+<div class="menu">
+    <a href="../../dashboard/admin_dashboard.php">View Dashboard</a>
+    <a href="../application/viewApplications.html">View Applications</a>
+    <a href="viewObjections.html">View Objections</a>
+    <a href="../account/viewAccounts.html">View Accounts</a>
+    <a href="../../../backend/authentication/logout.php">Log Out</a>
+</div>
+
+<div class="content">
+    <h1>Objections List</h1>
+
+    <div class="controls">
+        <label><strong>Objection Status:</strong></label>
+        <label><input type="radio" name="statusFilter" value="open" checked> Open Objections</label>
+        <label><input type="radio" name="statusFilter" value="closed"> Closed Objections</label>
+    </div>
+
+    <div class="controls">
+        <label><strong>Search by Objection ID:</strong></label>
+        <input type="text" id="searchIdInput" placeholder="Enter objection ID">
+    </div>
+
+    <div class="controls">
+        <label><strong>Search by Account ID:</strong></label>
+        <input type="text" id="searchAccountInput" placeholder="Enter account ID">
+    </div>
+
+    <div class="controls">
+        <label><strong>Search by Application ID:</strong></label>
+        <input type="text" id="searchApplicationIdInput" placeholder="Enter application ID">
+    </div>
+
+    <table id="objectionsTable">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Account ID</th>
+            <th>Application ID</th>
+            <th>Admin ID</th>
+            <th>Brief Summary</th>
+            <th>Detailed Explanation</th>
+            <th>Affected Parties</th>
+            <th>Status</th>
+            <th>Submission Date and Time</th>
+            <th>Last Change</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td colspan="10">Loading...</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function fetchObjections(status, searchId = '', searchAccount = '', searchApplicationId = '') {
+        const endpoint = status === 'closed'
+            ? '../../../backend/objection/getAllClosedObjections.php'
+            : '../../../backend/objection/getAllOpenObjections.php';
+
+        fetch(endpoint)
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.querySelector('#objectionsTable tbody');
+                tableBody.innerHTML = '';  // Clear the loading row
+
+                if (data.error) {
+                    tableBody.innerHTML = `<tr><td colspan="10">${data.error}</td></tr>`;
+                    return;
+                }
+
+                if (data.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="10">No objections found.</td></tr>`;
+                } else {
+                    let filteredData = data;
+                    if (searchId) {
+                        filteredData = filteredData.filter(obj => obj.id.toString() === searchId);
+                    }
+                    if (searchAccount) {
+                        filteredData = filteredData.filter(obj => obj.account_id.toString() === searchAccount);
+                    }
+                    if (searchApplicationId) {
+                        filteredData = filteredData.filter(obj => obj.application_id.toString() === searchApplicationId);
+                    }
+
+                    filteredData.forEach(obj => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${obj.id}</td>
+                            <td>${obj.account_id}</td>
+                            <td>${obj.application_id}</td>
+                            <td>${obj.admin_id}</td>
+                            <td>${obj.brief_summary}</td>
+                            <td>${obj.detailed_explanation}</td>
+                            <td>${obj.affected_parties}</td>
+                            <td>${obj.status_status}</td>
+                            <td>${new Date(obj.submission_date_and_time).toLocaleString()}</td>
+                            <td>${new Date(obj.last_change).toLocaleString()}</td>
+                        `;
+                        row.addEventListener('click', () => {
+                            window.location.href = `objectionDetails.php?objection_id=${obj.id}`;
+                        });
+                        tableBody.appendChild(row);
+                    });
+                }
+            })
+            .catch(error => {
+                document.querySelector('#objectionsTable tbody').innerHTML = `<tr><td colspan="10">Error loading data.</td></tr>`;
+                console.error('Error:', error);
+            });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchObjections('open');
+
+        document.querySelectorAll('input[name="statusFilter"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const selectedStatus = this.value;
+                fetchObjections(selectedStatus);
+            });
+        });
+
+        document.getElementById('searchIdInput').addEventListener('input', function() {
+            const searchId = this.value.trim();
+            const searchAccount = document.getElementById('searchAccountInput').value.trim();
+            const searchApplicationId = document.getElementById('searchApplicationIdInput').value.trim();
+            const selectedStatus = document.querySelector('input[name="statusFilter"]:checked').value;
+            fetchObjections(selectedStatus, searchId, searchAccount, searchApplicationId);
+        });
+
+        document.getElementById('searchAccountInput').addEventListener('input', function() {
+            const searchAccount = this.value.trim();
+            const searchId = document.getElementById('searchIdInput').value.trim();
+            const searchApplicationId = document.getElementById('searchApplicationIdInput').value.trim();
+            const selectedStatus = document.querySelector('input[name="statusFilter"]:checked').value;
+            fetchObjections(selectedStatus, searchId, searchAccount, searchApplicationId);
+        });
+
+        document.getElementById('searchApplicationIdInput').addEventListener('input', function() {
+            const searchApplicationId = this.value.trim();
+            const searchId = document.getElementById('searchIdInput').value.trim();
+            const searchAccount = document.getElementById('searchAccountInput').value.trim();
+            const selectedStatus = document.querySelector('input[name="statusFilter"]:checked').value;
+            fetchObjections(selectedStatus, searchId, searchAccount, searchApplicationId);
+        });
+    });
+</script>
 
 </body>
 </html>
