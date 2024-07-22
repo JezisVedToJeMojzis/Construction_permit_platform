@@ -19,9 +19,9 @@ try {
     $pdoManager = new PDOAdminManager($serverName, $userName, $userPassword, $databaseName);
 
     $applicationId = $_GET['application_id'];
-    $accountId = $_SESSION["admin_id"];
+    $adminId = $_SESSION["admin_id"];
 
-    $pdoManager->assignAdminToApplication($applicationId, $accountId);
+    $pdoManager->assignAdminToApplication($applicationId, $adminId);
 
     header("Location: ../../../frontend/dashboard/admin_dashboard.php");
     exit();

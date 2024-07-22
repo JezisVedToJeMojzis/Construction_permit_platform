@@ -18,10 +18,10 @@ header('Content-Type: application/json');
 try {
     $pdoManager = new PDOAdminManager($serverName, $userName, $userPassword, $databaseName);
 
-    $accountId = $_SESSION["accountId"];
+    $adminId = $_SESSION["admin_id"];
     $objectionId = $_GET['objection_id'];
 
-    $pdoManager->assignAdminToObjection($objectionId, $accountId);
+    $pdoManager->assignAdminToObjection($objectionId, $adminId);
 
     header("Location: ../../../frontend/dashboard/admin_dashboard.php");
     exit();

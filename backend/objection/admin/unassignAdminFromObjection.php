@@ -19,8 +19,9 @@ try {
     $pdoManager = new PDOAdminManager($serverName, $userName, $userPassword, $databaseName);
 
     $objectionId = $_GET['objection_id'];
+    $adminId = $_SESSION["admin_id"];
 
-    $pdoManager->unassignAdminFromObjection($objectionId);
+    $pdoManager->unassignAdminFromObjection($objectionId, $adminId);
 
     header("Location: ../../../frontend/dashboard/admin_dashboard.php");
     exit();

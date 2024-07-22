@@ -1,4 +1,5 @@
 <?php
+session_start();
 $objectionId = isset($_GET['objection_id']) ? intval($_GET['objection_id']) : null;
 
 if (!$objectionId) {
@@ -27,6 +28,12 @@ if (!$objectionId) {
 
 <div class="content">
     <h1>Objection Details</h1>
+
+    <!-- Assign to me button -->
+    <div id="assign-button-container"></div>
+
+    <!-- Unassign to me button -->
+    <div id="unassign-button-container"></div>
 
     <!-- General Information -->
     <div class="details-section">
@@ -84,6 +91,8 @@ if (!$objectionId) {
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const objectionId = <?php echo json_encode($objectionId); ?>;
+        const sessionAdminId = <?php echo json_encode($_SESSION['admin_id']); ?>;
+        let currentAdminId = null;
 
         if (!objectionId) {
             document.querySelector('#accountInfoList').innerHTML = '<li>objection ID is missing.</li>';
@@ -203,12 +212,42 @@ if (!$objectionId) {
                             logList.innerHTML = `<li>Error loading logs.</li>`;
                             console.error('Error:', error);
                         });
+
+                    const assignBtnContainer = document.getElementById('assign-button-container');
+                    const assignBtn = document.createElement('a');
+                    assignBtn.href = `../../../backend/objection/admin/assignAdminToObjection.php?objection_id=${objectionId}`;
+                    assignBtn.id = 'assign-btn';
+                    assignBtn.className = 'assign-btn';
+                    assignBtn.innerText = 'Assign to me';
+
+
+                    const unassignBtnContainer = document.getElementById('unassign-button-container');
+                    const unassignBtn = document.createElement('a');
+                    unassignBtn.href = `../../../backend/objection/admin/unassignAdminFromObjection.php?objection_id=${objectionId}`;
+                    unassignBtn.id = 'unassign-btn';
+                    unassignBtn.className = 'unassign-btn';
+                    unassignBtn.innerText = 'Unassign from me';
+
+                    currentAdminId = data.admin_id;  // Retrieve the current admin ID
+
+                    if(currentAdminId == null){
+                        assignBtnContainer.appendChild(assignBtn);
+                    }
+
+                    if(currentAdminId != null && currentAdminId == sessionAdminId){
+                        unassignBtnContainer.appendChild(unassignBtn);
+                    }
+
                 })
+
+
                 .catch(error => {
                     document.querySelector('#generalInfoList').innerHTML = `<li>Error loading data.</li>`;
                     console.error('Error:', error);
                 });
         }
+
+        fetchDetails();
 
         document.getElementById('submitCommentBtn').addEventListener('click', function() {
             const commentText = document.getElementById('newComment').value.trim();
@@ -259,8 +298,6 @@ if (!$objectionId) {
                 toggleLogBtn.querySelector('.arrow').classList.remove('arrow-up');
             }
         });
-
-        fetchDetails();
     });
 </script>
 
