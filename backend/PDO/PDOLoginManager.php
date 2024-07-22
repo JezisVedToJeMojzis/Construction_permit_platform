@@ -38,7 +38,8 @@ class PDOLoginManager
                     oa.house_number AS oa_house_number, oa.city AS oa_city, 
                     oa.post_code AS oa_post_code, oa.country AS oa_country, 
                     oa.registration_number AS oa_registration_number,
-                    aa.first_name AS aa_first_name, aa.last_name AS aa_last_name
+                    aa.first_name AS aa_first_name, aa.last_name AS aa_last_name,
+                    aa.id AS aa_id
                 FROM account a
                 LEFT JOIN private_person_account pp ON a.id = pp.account_id AND a.role = 'private'
                 LEFT JOIN organization_account oa ON a.id = oa.account_id AND a.role = 'organization'

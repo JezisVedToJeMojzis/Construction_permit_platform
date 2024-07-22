@@ -1,8 +1,15 @@
 <?php
+session_start();
 $applicationId = isset($_GET['application_id']) ? intval($_GET['application_id']) : null;
+$accountId = isset($_SESSION['account_id']) ? intval($_SESSION['account_id']) : null;
 
 if (!$applicationId) {
     echo "Application ID is missing or invalid.";
+    exit();
+}
+
+if (!$accountId) {
+    echo "Account ID is missing or invalid.";
     exit();
 }
 ?>
@@ -27,6 +34,12 @@ if (!$applicationId) {
 
 <div class="content">
     <h1>Application Details</h1>
+
+    <!-- Assign to me button -->
+    <div id="assign-button-container"></div>
+
+    <!-- Unassign to me button -->
+    <div id="unassign-button-container"></div>
 
     <!-- General Information -->
     <div class="details-section">
@@ -92,12 +105,8 @@ if (!$applicationId) {
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const applicationId = <?php echo json_encode($applicationId); ?>;
-
-        if (!applicationId) {
-            document.querySelector('#accountInfoList').innerHTML = '<li>Application ID is missing.</li>';
-            return;
-        }
-
+        const sessionAdminId = <?php echo json_encode($_SESSION['admin_id']); ?>;
+        let currentAdminId = null;
 
         function fetchDetails() {
             fetch(`../../../backend/application/getApplicationDetailsById.php?application_id=${applicationId}`)
@@ -242,9 +251,34 @@ if (!$applicationId) {
                             logList.innerHTML = `<li>Error loading logs.</li>`;
                             console.error('Error:', error);
                         });
+
+                    const assignBtnContainer = document.getElementById('assign-button-container');
+                    const assignBtn = document.createElement('a');
+                    assignBtn.href = `../../../backend/application/admin/assignAdminToApplication.php?application_id=${applicationId}`;
+                    assignBtn.id = 'assign-btn';
+                    assignBtn.className = 'assign-btn';
+                    assignBtn.innerText = 'Assign to me';
+
+
+                    const unassignBtnContainer = document.getElementById('unassign-button-container');
+                    const unassignBtn = document.createElement('a');
+                    unassignBtn.href = `../../../backend/application/admin/unassignAdminFromApplication.php?application_id=${applicationId}`;
+                    unassignBtn.id = 'unassign-btn';
+                    unassignBtn.className = 'unassign-btn';
+                    unassignBtn.innerText = 'Unassign from me';
+
+                    currentAdminId = data.admin_id;  // Retrieve the current admin ID
+
+                    if(currentAdminId == null){
+                        assignBtnContainer.appendChild(assignBtn);
+                    }
+
+                   if(currentAdminId != null && currentAdminId == sessionAdminId){
+                       unassignBtnContainer.appendChild(unassignBtn);
+                   }
+
                 })
                 .catch(error => {
-                    document.querySelector('#generalInfoList').innerHTML = `<li>Error loading data.</li>`;
                     console.error('Error:', error);
                 });
         }
@@ -290,7 +324,6 @@ if (!$applicationId) {
             this.querySelector('.arrow').classList.toggle('arrow-up', !isHidden);
         });
     });
-
 </script>
 
 </body>

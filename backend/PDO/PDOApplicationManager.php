@@ -189,6 +189,7 @@ VALUES (:application_id, :territorial_decision, :ownership_document_or_contracto
     s.status AS application_status,
     a.submission_date_and_time,
     a.last_change,
+    a.admin_id,
     
     
     -- Property details

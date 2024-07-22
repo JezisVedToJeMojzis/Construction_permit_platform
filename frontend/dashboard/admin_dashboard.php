@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 ?>
 
 <!DOCTYPE html>
@@ -25,6 +26,7 @@ session_start();
     <h3>Profile Information</h3>
     <ul class="profile-info">
         <li><strong>Account ID:</strong> <?php echo htmlspecialchars($_SESSION['account_id']); ?></li>
+        <li><strong>Admin ID:</strong> <?php echo htmlspecialchars($_SESSION['admin_id']); ?></li>
         <li><strong>First Name:</strong> <?php echo htmlspecialchars($_SESSION['first_name']); ?></li>
         <li><strong>Last Name:</strong> <?php echo htmlspecialchars($_SESSION['last_name']); ?></li>
         <li><strong>Email:</strong> <?php echo htmlspecialchars($_SESSION['account_email']); ?></li>

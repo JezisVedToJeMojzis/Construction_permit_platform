@@ -57,6 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     header("Location: ../../frontend/dashboard/user_dashboard.php");
                     exit();
                 case 'admin':
+                    $_SESSION['admin_id'] = $user['aa_id'];
                     $_SESSION['first_name'] = $user['aa_first_name'];
                     $_SESSION['last_name'] = $user['aa_last_name'];
                     header("Location: ../../frontend/dashboard/admin_dashboard.php");

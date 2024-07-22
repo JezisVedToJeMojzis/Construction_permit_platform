@@ -53,7 +53,7 @@ class PDOAdminManager
             );
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            $stmtUnassign = $conn->prepare("UPDATE applicaiton SET admin_id = NULL WHERE id = :application_id");
+            $stmtUnassign = $conn->prepare("UPDATE application SET admin_id = NULL WHERE id = :application_id");
             $stmtUnassign->bindParam(':application_id', $applicationId);
             $stmtUnassign->execute();
 

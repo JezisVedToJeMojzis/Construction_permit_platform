@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once "../PDO/PDOAdminManager.php";
+require_once "../../PDO/PDOAdminManager.php";
 
-$config = require_once "../config.php";
+$config = require_once "../../config.php";
 
 if (!isset($config["servername"], $config["username"], $config["password"], $config["database"])) {
     die("Configuration error: Missing database credentials.");
@@ -18,12 +18,12 @@ header('Content-Type: application/json');
 try {
     $pdoManager = new PDOAdminManager($serverName, $userName, $userPassword, $databaseName);
 
-    $accountId = $_SESSION["accountId"];
     $applicationId = $_GET['application_id'];
+    $accountId = $_SESSION["admin_id"];
 
-    $pdoManager->assignAdminToObjection($applicationId, $accountId);
+    $pdoManager->assignAdminToApplication($applicationId, $accountId);
 
-    header("Location: ../../frontend/dashboard/admin_dashboard.php");
+    header("Location: ../../../frontend/dashboard/admin_dashboard.php");
     exit();
 
 } catch (Exception $e) {
