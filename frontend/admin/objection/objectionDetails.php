@@ -29,6 +29,20 @@ if (!$objectionId) {
 <div class="content">
     <h1>Objection Details</h1>
 
+    <!-- Status Change Section -->
+    <div class="details-section" id="statusChangeSection">
+        <h2>Change Objection Status</h2>
+        <select id="statusSelect">
+            <option value="1">Submitted and Created</option>
+            <option value="2">In Progress</option>
+            <option value="3">Withdrawn</option>
+            <option value="4">On Hold</option>
+            <option value="5">Denied</option>
+            <option value="6">Approved</option>
+        </select>
+        <button id="changeStatusBtn">Change Status</button>
+    </div>
+
     <!-- Assign to me button -->
     <div id="assign-button-container"></div>
 
@@ -298,6 +312,22 @@ if (!$objectionId) {
                 toggleLogBtn.querySelector('.arrow').classList.remove('arrow-up');
             }
         });
+
+        document.getElementById('changeStatusBtn').addEventListener('click', function() {
+
+            const selectedStatusId = document.getElementById('statusSelect').value;
+            fetch(`../../../backend/objection/admin/setObjectionStatus.php?objection_id=${objectionId}&status_id=${selectedStatusId}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Fetch successful:', data);
+                    // Refresh the page after the fetch request completes
+                    location.reload();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+
     });
 </script>
 

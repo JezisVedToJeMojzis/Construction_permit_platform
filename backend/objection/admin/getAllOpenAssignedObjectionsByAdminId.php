@@ -18,15 +18,15 @@ header('Content-Type: application/json');
 try {
     $pdoManager = new PDOAdminManager($serverName, $userName, $userPassword, $databaseName);
 
-    $applicationId = $_GET['application_id'];
     $adminId = $_SESSION["admin_id"];
 
-    $pdoManager->assignAdminToApplication($applicationId, $adminId);
-
-    header("Location: ../../../frontend/admin/application/applicationDetails.php?application_id=$applicationId");
-    exit();
+    $objections = $pdoManager->getAllOpenAssignedObjectionsByAdminId($adminId);
 
 } catch (Exception $e) {
     echo json_encode(['error' => 'An error occurred: ' . $e->getMessage()]);
 }
+
+header('Content-Type: application/json');
+echo json_encode($objections);
 ?>
+

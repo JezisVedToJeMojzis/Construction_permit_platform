@@ -23,7 +23,7 @@ try {
 
     $pdoManager->unassignAdminFromObjection($objectionId, $adminId);
 
-    header("Location: ../../../frontend/dashboard/admin_dashboard.php");
+    header("Location: ../../../frontend/admin/objection/objectionDetails.php?objection_id=$objectionId");
     exit();
 
 } catch (Exception $e) {

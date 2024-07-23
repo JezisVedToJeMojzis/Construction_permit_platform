@@ -19,14 +19,15 @@ try {
     $pdoManager = new PDOAdminManager($serverName, $userName, $userPassword, $databaseName);
 
     $applicationId = $_GET['application_id'];
-    $adminId = $_SESSION["admin_id"];
+    $statusId = $_GET['status_id'];
 
-    $pdoManager->assignAdminToApplication($applicationId, $adminId);
+    $pdoManager->setApplicationStatus($applicationId, $statusId);
 
-    header("Location: ../../../frontend/admin/application/applicationDetails.php?application_id=$applicationId");
-    exit();
+   // header("Location: ../../frontend/dashboard/user_dashboard.php");
+    echo json_encode(['status' => 'success']);
 
 } catch (Exception $e) {
     echo json_encode(['error' => 'An error occurred: ' . $e->getMessage()]);
 }
+
 ?>

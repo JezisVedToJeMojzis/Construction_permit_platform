@@ -23,7 +23,7 @@ try {
 
     $pdoManager->unassignAdminFromApplication($applicationId, $adminId);
 
-    header("Location: ../../../frontend/dashboard/admin_dashboard.php");
+    header("Location: ../../../frontend/admin/application/applicationDetails.php?application_id=$applicationId");
     exit();
 
 } catch (Exception $e) {

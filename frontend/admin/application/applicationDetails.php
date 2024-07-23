@@ -35,6 +35,26 @@ if (!$accountId) {
 <div class="content">
     <h1>Application Details</h1>
 
+    <!-- Status Change Section -->
+    <div class="details-section" id="statusChangeSection">
+        <h2>Change Application Status</h2>
+        <select id="statusSelect">
+            <option value="1">Submitted</option>
+            <option value="2">Awaiting Payment</option>
+            <option value="3">Created</option>
+            <option value="5">In Progress</option>
+            <option value="6">Incomplete</option>
+            <option value="7">Expired</option>
+            <option value="8">Open for Objections</option>
+            <option value="9">Under Objection</option>
+            <option value="10">Withdrawn</option>
+            <option value="11">On Hold</option>
+            <option value="12">Denied</option>
+            <option value="13">Approved</option>
+        </select>
+        <button id="changeStatusBtn">Change Status</button>
+    </div>
+
     <!-- Assign to me button -->
     <div id="assign-button-container"></div>
 
@@ -259,7 +279,6 @@ if (!$accountId) {
                     assignBtn.className = 'assign-btn';
                     assignBtn.innerText = 'Assign to me';
 
-
                     const unassignBtnContainer = document.getElementById('unassign-button-container');
                     const unassignBtn = document.createElement('a');
                     unassignBtn.href = `../../../backend/application/admin/unassignAdminFromApplication.php?application_id=${applicationId}`;
@@ -323,8 +342,23 @@ if (!$accountId) {
             commentSection.classList.toggle('hidden');
             this.querySelector('.arrow').classList.toggle('arrow-up', !isHidden);
         });
-    });
-</script>
 
+        document.getElementById('changeStatusBtn').addEventListener('click', function() {
+
+            const selectedStatusId = document.getElementById('statusSelect').value;
+            fetch(`../../../backend/application/admin/setApplicationStatus.php?application_id=${applicationId}&status_id=${selectedStatusId}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Fetch successful:', data);
+                    // Refresh the page after the fetch request completes
+                    location.reload();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    });
+
+</script>
 </body>
 </html>

@@ -130,4 +130,213 @@ class PDOAdminManager
         }
     }
 
+    public function getAllOpenAssignedApplicationsByAdminId($adminId) {
+        try {
+            $conn = new PDO(
+                "mysql:host=$this->serverName;dbname=$this->databaseName",
+                $this->userName,
+                $this->userPassword
+            );
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $stmt = $conn->prepare("
+            SELECT 
+                a.*,
+                s.status AS status_status
+            FROM 
+                application a
+            JOIN 
+                application_status s ON a.status_id = s.id
+            WHERE 
+                a.admin_id = :admin_id 
+                AND a.status_id NOT IN (7, 10, 12, 13)
+            ");
+            $stmt->bindParam(':admin_id', $adminId);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $conn = null;
+            return $result;
+
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+
+    public function getAllClosedAssignedApplicationsByAdminId($adminId) {
+        try {
+            $conn = new PDO(
+                "mysql:host=$this->serverName;dbname=$this->databaseName",
+                $this->userName,
+                $this->userPassword
+            );
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $stmt = $conn->prepare("
+            SELECT 
+                a.*,
+                s.status AS status_status
+            FROM 
+                application a
+            JOIN 
+                application_status s ON a.status_id = s.id
+            WHERE 
+                a.admin_id = :admin_id 
+                AND a.status_id IN (7, 10, 12, 13)
+            ");
+            $stmt->bindParam(':admin_id', $adminId);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $conn = null;
+            return $result;
+
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+
+    public function getAllOpenAssignedObjectionsByAdminId($adminId) {
+        try {
+            $conn = new PDO(
+                "mysql:host=$this->serverName;dbname=$this->databaseName",
+                $this->userName,
+                $this->userPassword
+            );
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $stmt = $conn->prepare("
+            SELECT 
+                o.*,
+                s.status AS status_status
+            FROM 
+                objection o
+            JOIN 
+                objection_status s ON o.status_id = s.id
+            WHERE 
+                o.admin_id = :admin_id 
+                AND o.status_id NOT IN (3, 5, 6)
+            ");
+            $stmt->bindParam(':admin_id', $adminId);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $conn = null;
+            return $result;
+
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+
+    public function getAllClosedAssignedObjectionsByAdminId($adminId) {
+        try {
+            $conn = new PDO(
+                "mysql:host=$this->serverName;dbname=$this->databaseName",
+                $this->userName,
+                $this->userPassword
+            );
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $stmt = $conn->prepare("
+            SELECT 
+                o.*,
+                s.status AS status_status
+            FROM 
+                objection o
+            JOIN 
+                objection_status s ON o.status_id = s.id
+            WHERE 
+                o.admin_id = :admin_id 
+                AND o.status_id IN (3, 5, 6)
+            ");
+            $stmt->bindParam(':admin_id', $adminId);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $conn = null;
+            return $result;
+
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+
+    public function setApplicationStatus($applicationId, $statusId){
+        try {
+            $conn = new PDO(
+                "mysql:host=$this->serverName;dbname=$this->databaseName",
+                $this->userName,
+                $this->userPassword
+            );
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $stmt = $conn->prepare("UPDATE application SET status_id = :status_id WHERE id = :application_id");
+            $stmt->bindParam(':application_id', $applicationId);
+            $stmt->bindParam(':status_id', $statusId);
+            $stmt->execute();
+
+            $stmtStatus = $conn->prepare("SELECT status FROM application_status WHERE id = :status_id");
+            $stmtStatus->bindParam(':status_id', $statusId);
+            $stmtStatus->execute();
+            $status = $stmtStatus->fetch(PDO::FETCH_ASSOC);
+
+            // Update logs
+            $description = "Application status has been changed to: " . $status['status'];
+            $stmtLogs = $conn->prepare("INSERT INTO application_log (application_id, description, timestamp) VALUES (:application_id, :description, NOW())");
+            $stmtLogs->bindParam(':application_id', $applicationId);
+            $stmtLogs->bindParam(':description', $description);
+            $stmtLogs->execute();
+
+            $conn = null;
+
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
+
+    public function setObjectionStatus($objectionId, $statusId){
+        try {
+            $conn = new PDO(
+                "mysql:host=$this->serverName;dbname=$this->databaseName",
+                $this->userName,
+                $this->userPassword
+            );
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $stmt = $conn->prepare("UPDATE objection SET status_id = :status_id WHERE id = :objection_id");
+            $stmt->bindParam(':objection_id', $objectionId);
+            $stmt->bindParam(':status_id', $statusId);
+            $stmt->execute();
+
+            $stmtStatus = $conn->prepare("SELECT status FROM objection_status WHERE id = :status_id");
+            $stmtStatus->bindParam(':status_id', $statusId);
+            $stmtStatus->execute();
+            $status = $stmtStatus->fetch(PDO::FETCH_ASSOC);
+
+            // Update logs
+            $description = "Objection status has been changed to: " . $status['status'];
+            $stmtLogs = $conn->prepare("INSERT INTO objection_log (objection_id, description, timestamp) VALUES (:objection_id, :description, NOW())");
+            $stmtLogs->bindParam(':objection_id', $objectionId);
+            $stmtLogs->bindParam(':description', $description);
+            $stmtLogs->execute();
+
+            $conn = null;
+
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+    }
 }
